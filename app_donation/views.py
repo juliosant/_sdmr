@@ -40,14 +40,15 @@ def customer_service(request, id):
         post['recipient'] = profile
         post['address'] = 'Rua das Estrelas, nº 3131 - Centro, Fortaleza-CE'
         post['status_service'] = CustomerService.STATUS_SERVICE_CHOICES[0][0]
-        post['confirmed'] = ''
+        post['confirmed'] = False
         post['return_recipient'] = ''
         post['points_service'] = 0
         post['modification_date'] = None
-        post['tagged'] = ''
+        post['tagged'] = True
         request.POST = post
 
         ca_form = CustomerServiceForm(request.POST)
+        print(ca_form)
         print(ca_form.is_valid())
         if ca_form.is_valid():
             ca_form.save()
@@ -89,14 +90,14 @@ def donation(request, id):
     if request.POST:
         post = request.POST.copy()
         post['customerService'] = ca
-        post['confirmed'] = ''
+        post['confirmed'] = False
         post['status_donation'] = Donation.STATUS_DONATION_CHOICES[1][0]
         request.POST = post
 
         donation_form = DonationForm(request.POST)
         materials_form_factory = inlineformset_factory(Donation, Material, form=MaterialForm)
         materials_form = materials_form_factory(request.POST)
-        
+        print(donation_form.is_valid(), materials_form.is_valid())
         if donation_form.is_valid() and materials_form.is_valid():
 
             ca.status_service = CustomerService.STATUS_SERVICE_CHOICES[2][0]
