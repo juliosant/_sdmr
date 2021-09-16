@@ -110,7 +110,7 @@ def donation(request, id):
             return redirect('users_auth:userpage')
 
     donation_form = DonationForm()
-    materials_form_factory = inlineformset_factory(Donation, Material, form=MaterialForm, extra=3)
+    materials_form_factory = inlineformset_factory(Donation, Material, form=MaterialForm, extra=1)
     materials_form = materials_form_factory()
 
     content = {
