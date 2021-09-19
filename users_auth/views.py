@@ -10,10 +10,10 @@ def userpage(request):
     #search = Q()
 
     if request.user.profile_type == 'D':
-        calls = CustomerService.objects.filter(requester=request.user.id)
+        calls = CustomerService.objects.filter(requester=request.user.id).order_by("-id")
         return render(request, 'userpage.html', {'calls': calls})
     elif request.user.profile_type == 'R':
-        calls = CustomerService.objects.filter(recipient=request.user.id)
+        calls = CustomerService.objects.filter(recipient=request.user.id).order_by("-id")
         return render(request, 'userpage_rc.html', {'calls': calls})
 
 def login_profile(request):

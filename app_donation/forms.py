@@ -31,6 +31,7 @@ class MaterialForm(forms.ModelForm):
     class Meta:
         model = Material
         fields = '__all__'
-        #widgets = {
-        #    'points': forms.TextInput(attrs={'readonly':''})
-        #}
+        widgets = {
+            'amount': forms.TextInput(attrs={'onkeyup': "calc_points('0');"}),
+            'points': forms.TextInput(attrs={'readonly':'', 'onclick': "calc_points('0');"})
+        }

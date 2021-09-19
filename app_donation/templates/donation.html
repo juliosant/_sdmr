@@ -102,12 +102,13 @@
                     {{ mf.material_type|f_class:'form-control' }}
                 </div>
                 <div id="amount-0" class="col-md-2 pb-2">
-                    <label>Qtd:</label>
+                    <label>Qtd (Kg):</label>
                     {{ mf.amount|f_class:'form-control' }}
                 </div>
                 <div id="pts-0" class="col-md-2 pb-2">
                     <label>Pts:</label>
                     {{ mf.points|f_class:'form-control' }}
+            
                 </div>
                 <div id="delete-0" class="col-md-1 pb-2">
                     <label></label>
@@ -185,11 +186,12 @@
         ipt_type.value = '';
 
         var lb_amount = document.createElement('LABEL');
-        lb_amount.innerHTML = "Qtd:";
+        lb_amount.innerHTML = "Qtd (Kg):";
         var ipt_amount = document.querySelector('#id_material_set-0-amount').cloneNode(true);
         ipt_amount.name = 'material_set-'+total_forms.value+'-amount';
         ipt_amount.id = 'id_material_set-'+total_forms.value+'-amount';
         ipt_amount.value = '';
+        ipt_amount.setAttribute("onkeyup", "calc_points('"+total_forms.value+"')");
 
         var lb_pts = document.createElement('LABEL');
         lb_pts.innerHTML = "Pts:";
@@ -197,6 +199,7 @@
         ipt_pts.name = 'material_set-'+total_forms.value+'-points';
         ipt_pts.id = 'id_material_set-'+total_forms.value+'-points';
         ipt_pts.value = '';
+        ipt_pts.setAttribute("onclick", "calc_points('"+total_forms.value+"')");
 
         var lb_delete = document.createElement('LABEL');
         lb_delete.innerHTML = " ";
@@ -263,12 +266,14 @@
             let ipt_amount = document.getElementById('id_material_set-'+num_id+'-amount');
             ipt_amount.id = 'id_material_set-'+id+'-amount';
             ipt_amount.name = 'material_set-'+id+'-amount';
+            ipt_amount.setAttribute("onkeyup", "calc_points('"+id+"')");
             
             let pt_material = document.getElementById('pts-'+num_id);
             pt_material.id = 'pts-'+id;
             let ipt_pts = document.getElementById('id_material_set-'+num_id+'-points');
             ipt_pts.id = 'id_material_set-'+id+'-points';
             ipt_pts.name = 'material_set-'+id+'-points';
+            ipt_pts.setAttribute("onclick", "calc_points('"+id+"')");
             
             let dl_material = document.getElementById('delete-'+num_id);
             dl_material.id = 'delete-'+id
@@ -284,6 +289,11 @@
         var total_forms = document.querySelector('#id_material_set-TOTAL_FORMS');
         let row = document.getElementById('add_mat-'+id);
 
+        if (parseInt(total_forms.value) === 1){
+            alert("Para doar tem que ter aguma materia, ne?");
+            return
+        }
+
         row.id = 'delete'
         sort_tags(id)
     
@@ -291,6 +301,12 @@
         
         total_forms.value = parseInt(total_forms.value) - 1;
 
+    }
+
+    function calc_points(id){
+        amount = document.getElementById('id_material_set-'+id+'-amount');
+        result = document.getElementById('id_material_set-'+id+'-points');
+        result.value = parseFloat(amount.value) * 10;
     }
 </script>
 {% endblock %}
