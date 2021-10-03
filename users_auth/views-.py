@@ -6,15 +6,18 @@ from django.db.models.query_utils import Q
 from .forms import LoginForm, ProfileChangeForm, ProfileCreationForm, ProfileForm
 
 # Create your views here.
+
+# DN
 def userpage(request):
     #search = Q()
 
     if request.user.profile_type == 'D':
         calls = CustomerService.objects.filter(requester=request.user.id).order_by("-id")
-        return render(request, 'userpage.html', {'calls': calls})
+        return render(request, 'authenticated_user/donor/userpage.html', {'calls': calls})
     elif request.user.profile_type == 'R':
         calls = CustomerService.objects.filter(recipient=request.user.id).order_by("-id")
-        return render(request, 'userpage_rc.html', {'calls': calls})
+        return render(request, 'authenticated_user/recyclingcenter/userpage.html', {'calls': calls})
+
 
 def login_profile(request):
     if request.POST:
@@ -31,7 +34,7 @@ def login_profile(request):
     content = {
         'login_form': login_form
     }
-    return render(request, 'login.html', content)
+    return render(request, 'management_user/login/login.html', content)
 
 
 def logout_profile(request):
@@ -50,4 +53,4 @@ def register_profile(request):
     content = {
         'profile_form': profile_form
     }
-    return render(request, 'register.html', content)
+    return render(request, 'management_user/register/register.html', content)

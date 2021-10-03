@@ -30,7 +30,8 @@ class Donation(models.Model):
     STATUS_DONATION_CHOICES = [
         ("0", "Confirmada"),
         ("1", "Precisa Revisar"),
-        ("2", "Cancelada")
+        ("2", "Cancelada"),
+        ("3", "Aguardando Materiais")
     ]
     customerService = models.ForeignKey(CustomerService, on_delete=CASCADE)
     joined_date = models.DateTimeField(auto_now_add=True)

@@ -1,0 +1,85 @@
+{% extends 'management_user/base/base.html' %}
+{% load bootstrap_filter %}
+
+{% block title %}.:Registrar{% endblock %}
+
+{% block content %}
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+    -moz-appearance: textfield;
+    }
+    
+    .card {
+        margin-top: 3%;
+        margin-bottom: 3%;
+    }
+</style>
+<form method="POST">
+    {% csrf_token %}
+    <div class="card mx-auto px-auto w-50">
+        <div class="card-header h2 text-success">Registrar Doador</div>
+        <div class="card-body">
+            <!--label>Código*</label>
+            {{ dn_form.code|f_class:'form-control' }}-->
+            <div class="row">
+                <div class='col-md-6'>
+                    <label>Nome*</label>
+                    {{ dn_form.first_name|f_class:'form-control' }}
+                </div>
+                <div class='col-md-6'>
+                    <label>Sobrenome*</label>
+                    {{ dn_form.last_name|f_class:'form-control' }}
+                </div>
+            </div>    
+    
+            <div class="row">
+                <div class='col-md-6'>
+                    <label>Email</label>
+                    {{ dn_form.email|f_class:'form-control' }}
+                </div>
+                <div class='col-md-6'>
+                    <label>Telefone</label>
+                    {{ dn_form.phone|f_class:'form-control' }}
+                </div>
+            </div>
+
+            <label>Sobre mim</label>
+            {{ dn_form.about|f_class:'form-control' }}
+
+            <!--label>Nome de usuário*</label>
+            {{ dn_form.username|f_class:'form-control' }}-->
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Senha</label>
+                    {{ dn_form.password1|f_class:'form-control' }}
+                </div>
+                <div class="col-md-6">
+                    <label>Confirmar Senha</label>
+                    {{ dn_form.password2|f_class:'form-control' }}
+                </div>
+            </div>
+            <!--label>Tipo de Usuário*</label>
+            {{ dn_form.profile_type|f_class:'form-control' }}-->
+
+        </div>
+        <button type="submit" class="btn btn-success">Cadastrar</button>
+    </div>
+</form>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    function upperWord(id) {
+        var x = document.getElementById(id);
+        x.value = x.value.toUpperCase();
+    }
+</script>
+{% endblock %}

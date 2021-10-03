@@ -1,0 +1,49 @@
+{% extends 'authenticated_user/base/base.html' %}
+{% load bootstrap_filter %}
+
+{% block title %}.:Ranking{% endblock %}
+
+{% block content %}
+<div class="col-md-10 ps-0 pe-0 mx-auto">
+    <h1 class="text-center">RANKING</h1>
+    {% for donor in r %}
+    {% if request.user.donor.id != donor.1.id %}
+    <div class="card mx-auto w-50 p-3 mb-1 border border-dark text-center">    
+        <div class="row">
+            <div class="col-2 mx-auto">
+                #{{ donor.0 }}
+            </div>
+            <div class="col-md-4 mx-auto">
+                {{ donor.1.first_name }} {{ donor.1.last_name }}
+            </div>
+            <div class="col-3 mx-auto">
+                {{ donor.1.ranking_points }}
+            </div>
+        <br>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="card mx-auto w-50 border-success border-2 fw-bold text-success p-3 mb-1 text-center"> 
+        <div class="row">
+            <div class="col-2 mx-auto">
+                #{{ donor.0 }}
+            </div>
+            <div class="col-md-4 mx-auto">
+                VOCÊ
+            </div>
+            <div class="col-3 mx-auto">
+                {{ donor.1.ranking_points }}
+            </div>
+            <br>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if donor.0 == '3' %}
+        <hr class="mx-auto w-50">
+    {% endif %}
+    {% endfor %}
+</div>
+</div>
+{% endblock %}

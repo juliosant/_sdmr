@@ -21,6 +21,13 @@ class DonationForm(forms.ModelForm):
         (True, 'Sim'),
         (False, 'Não')        
     ]
+    STATUS_DONATION_CHOICE = [
+        ("3", ""),
+        ("0", "Confirmar"),
+        ("1", "Pedir Revisão"),
+        ("2", "Recusar"),
+    ]
+    status_donation = forms.ChoiceField(choices=STATUS_DONATION_CHOICE)
     confirmed = forms.ChoiceField(choices=STATUS_CONFIRMED)
     class Meta:
         model = Donation

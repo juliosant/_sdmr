@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'donation_service/base/base.html' %}
 {% load bootstrap_filter %}
 
 {% block title %}{% endblock %}
 
 {% block content %}
+<div class="col-md-10 mx-auto ps-5 pe-5">
 <div class="card-body w-75 mx-auto border-none">
     <h1 class="text-end">Confirmar Doação</h1>
 </div>
@@ -77,14 +78,17 @@
         <div class="card-body row">
             <div class="col-md-12 text-center">
                 <label class="h3">Confirmar:</label>
-                {{ donation_form.confirmed|f_class:'form-control w-25 mx-auto text-center' }}
+                {{ donation_form.status_donation|f_class:'form-control w-25 mx-auto text-center' }}
+                <!--{{ donation_form.confirmed|f_class:'form-control w-25 mx-auto text-center' }}-->
             </div>
         </div>
 
     </div>
     <div class="card-body w-75 mx-auto ps-0">
-        <a href="{% url 'users_auth:userpage' %}" class="btn btn-lg btn-outline-danger me-3">Cancelar</a>
+        <a href="{% url 'users_auth:userpage_dn' %}" class="btn btn-lg btn-outline-danger me-3">Cancelar</a>
         <button type="submit" class="btn btn-lg btn-success">Confirmar</button>
     </div>
 </form>
+</div>
+</div>
 {% endblock %}

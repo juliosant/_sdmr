@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'donation_service/base/base.html' %}
 {% load bootstrap_filter %}
 
 {% block title %}{% endblock %}
@@ -10,28 +10,42 @@
     }
 </style>
 
+<div class="col-md-10 mx-auto ps-5 pe-5">
 <form method="POST">
     {% csrf_token %}
     <div class="card card-body w-75 mx-auto">
         <!--input type="text" class="form-control"-->
         {{ search_rc_form.search|f_class:'form-control' }}
         <div class="d-flex content-justify-center mx-auto p-1">
-            <a href="{% url 'users_auth:userpage' %}" class="btn btn-light mx-auto m-2 border">Voltar</a>
+            <a href="{% url 'users_auth:userpage_dn' %}" class="btn btn-light mx-auto m-2 border">Voltar</a>
             <button class="btn btn-success mx-auto m-2">Pesquisar</button>
         </div>
     </div>
+    {% if messages %}
+    <div class="card card-body mx-auto w-75 p-0 mt-0 mb-0 border-0">
+        {% for message in messages %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <div class="card card-body w-75 mx-auto">
         {% if result is not None %}
             {% for r in result %}
                 <a href="{% url 'app_donation:customer_service' r.id %}" class="text-decoration-none">
                     <div class="cardcard-body">
-                        <h4 class="text-success">{{ r.code }} - {{ r.first_name}} {{r.last_name}}</h4>
+                        <h4 class="text-success">{{ r.code }} - {{ r.recyclingcenter.corporate_name }}</h4>
                         <p class="text-success">{{ r.about }}</p>
                     </div>
                 </a>
+                <hr>
             {% endfor %}
         {% endif %}
     </div>
+</div>
+</div>
 </form>
 {% endblock %}

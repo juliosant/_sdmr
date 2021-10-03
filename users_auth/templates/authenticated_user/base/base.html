@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -15,11 +15,19 @@
 </head>
 
 <body>
-    {% block content %}
-    {% endblock %}
+    <div class="mt-5">
+        <main class="container-fluid">
+        {% if request.user.profile_type == 'D' %}
+            {% include 'authenticated_user/base/sidebar_dn.html' %}
+        {% elif request.user.profile_type == 'R'  %}
+            {% include 'authenticated_user/base/sidebar_rc.html' %}
+        {% endif %}
+    
+        {% block content %}
+        {% endblock %}
+        </main>
+    </div>
 
-    {% block script %}
-    {% endblock %}
 </body>
 
 </html>

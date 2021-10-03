@@ -1,10 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'donation_service/base/base.html' %}
 {% load bootstrap_filter %}
 
 {% block title %}{% endblock %}
 
 {% block content %}
-
+<!--div class="col-md-2 ps-0 pe-0"></div-->
+<div class="col-md-10 mx-auto ps-5 pe-5">
 <div class="card-body w-75 mx-auto border-none">
     <h1 class="text-end">Registrar Atendimento</h1>
 </div>
@@ -21,7 +22,7 @@
             </div>
             <div class="col-md-6">
                 <label class="h3">Razão Social:</label>
-                {{ profile.first_name }} {{ profile.last_name }}
+                {{ profile.recyclingcenter.corporate_name }}
             </div>
             <div class="col-md-6">
                 <label class="h3">Telefone: </label>
@@ -38,7 +39,12 @@
         </div>
         <div class="card-body row mx-auto">
             <div class="col-md-12">
-                <h5 class="text-danger fw-bold">Rua das Estrelas, nº 3131 - Centro, Fortaleza-CE</h5>
+                <h5 class="text-danger fw-bold">
+                    {{ profile.recyclingcenter.address.public_place }}, 
+                    {{ profile.recyclingcenter.address.number }}, 
+                    {{ profile.recyclingcenter.address.district }} - 
+                    {{ profile.recyclingcenter.address.city }}, 
+                    {{ profile.recyclingcenter.address.state }}</h5>
             </div>
         </div>
 
@@ -61,4 +67,6 @@
         <button type="submit" class="btn btn-lg btn-success">Confirmar</button>
     </div>
 </form>
+</div>
+</div>
 {% endblock %}

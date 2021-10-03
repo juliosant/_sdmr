@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -15,9 +15,18 @@
 </head>
 
 <body>
+
     {% block content %}
     {% endblock %}
-
+    
+    {% block script %}
+    <script>
+        function upperWord(id) {
+            var x = document.getElementById(id);
+            x.value = x.value.toUpperCase();
+        }
+    </script>
+    {% endblock %}
 </body>
 
 </html>

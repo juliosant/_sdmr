@@ -1,0 +1,55 @@
+{% extends 'management_user/base/base.html' %}
+{% load bootstrap_filter %}
+
+{% block title %}.:Login{% endblock %}
+
+{% block content %}
+<style>
+    .card {
+        margin-top: 10%;
+        width: 18rem;
+    }
+</style>
+<form method="POST">
+    {% csrf_token %}
+    {% if messages %}
+    <div class="card card-body mx-auto p-0 border-0">
+        {% for message in messages %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="card mx-auto px-auto mt-0">
+    {% else %}
+    <div class="card mx-auto px-auto">
+    {% endif %}
+    
+        <div class="card-header h2 text-success">Login</div>
+        <div class="card-body">
+
+            <label>Usuário</label>
+            {{ login_form.user|f_class:'form-control' }}
+            <br>
+            <label>Senha</label>
+            {{ login_form.password|f_class:'form-control' }}
+            <br>
+            <div class=" text-center">
+                <a href="{% url 'users_auth:register_rc' %}" class="text-success text-decoration-none">Não tem conta? Registre-se</a>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Entrar</button>
+    </div>
+    <!--{% if messages %}
+    <div class="card card-body mx-auto mt-1 p-0 border-0">
+        {% for message in messages %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}-->
+</form>
+{% endblock %}
