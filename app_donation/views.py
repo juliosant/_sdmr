@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render
 from django.db.models.query_utils import Q
 from .forms import DonationForm, MaterialForm, SearchRCForm, CustomerServiceForm
 from .models import CustomerService, Donation, Material
+from time import sleep
 
 # Create your views here.
 def search_rc(request):
@@ -59,7 +60,7 @@ def customer_service(request, id):
 
         ca_form = CustomerServiceForm(request.POST)
         #print(ca_form)
-        print(ca_form.is_valid()) # teste
+        #print(ca_form.is_valid()) # teste
         if ca_form.is_valid():
             ca_form.save()
             return redirect('app_donation:search_rc')
@@ -77,7 +78,7 @@ def confirm_ca(request, id):
     ca_form = CustomerServiceForm(request.POST or None, instance=ca)
 
     if request.POST:
-        print(request.POST['confirmed'], type(request.POST['confirmed']))
+        #print(request.POST['confirmed'], type(request.POST['confirmed']))
 
         if request.POST['confirmed'] == 'True':
        
@@ -112,10 +113,11 @@ def donation(request, id):
         request.POST = post
 
         donation_form = DonationForm(request.POST)
-        print(request.POST)
+        #print(request.POST)
         materials_form_factory = inlineformset_factory(Donation, Material, form=MaterialForm)
         materials_form = materials_form_factory(request.POST)
-        print(donation_form.is_valid(), materials_form.is_valid())
+        
+        #print(donation_form.is_valid(), materials_form.is_valid())
         if donation_form.is_valid() and materials_form.is_valid():
 
             ca.status_service = CustomerService.STATUS_SERVICE_CHOICES[2][0]
@@ -155,13 +157,13 @@ def confirm_donation(request, id):
             for m in materials:
                 ca.points_service = ca.points_service + m.points
     
-            print(ca.points_service)
+            #print(ca.points_service)
 
             requester.ranking_points = requester.ranking_points + ca.points_service
             requester.save()
         
         elif request.POST['status_donation'] == '1':
-            print('a')
+            #print('a')
             donation.status_donation = Donation.STATUS_DONATION_CHOICES[1][0] # Doação recusada
             #ca.status_service = CustomerService.STATUS_SERVICE_CHOICES[3][0]
             #return redirect('users_auth:userpage_dn')
@@ -217,35 +219,37 @@ def edit_donation(request, id):
         post['status_donation'] = Donation.STATUS_DONATION_CHOICES[3][0]
         post['confirmed'] = donation.confirmed
 
-        #post['material_set-INITIAL_FORMS'] = '1'
+        post['material_set-INITIAL_FORMS'] = '0'
 
         request.POST = post
 
-        print(request.POST)
+        #print(request.POST)
 
         donation_form = DonationForm(request.POST, instance=ca)
         materials_form_factory = inlineformset_factory(Donation, Material, form=MaterialForm)
         materials_form = materials_form_factory(request.POST, instance=donation)
 
-        print(donation_form.is_valid(), materials_form.is_valid())
+        #print(donation_form.is_valid(), materials_form.is_valid())
         if donation_form.is_valid() and materials_form.is_valid():
 
-            #ca.status_service = CustomerService.STATUS_SERVICE_CHOICES[2][0]
-            #ca.save(force_update=True)
+            ca.status_service = CustomerService.STATUS_SERVICE_CHOICES[2][0]
+            ca.save(force_update=True)
 
-            #donation_ins = donation_form.save()
-            #materials_form.instance = donation_ins
-            #materials_form.save()
+            donation_ins = donation_form.save()
+            materials_form.instance = donation_ins
+            materials_form.save()
 
             return redirect('users_auth:userpage_rc')
 
     donation_form = DonationForm(instance=ca)
-    materials_form_factory = inlineformset_factory(Donation, Material, form=MaterialForm, extra=1)
+    materials_form_factory = inlineformset_factory(Donation, Material, form=MaterialForm, extra=0)
     materials_form = materials_form_factory(instance=donation)
+
 
     content = {
         'ca': ca,
         'donation_form': donation_form,
         'materials_form': materials_form,
+        'count': 0
     }
-    return render(request, 'donation_service/recyclingcenter/donation.html', content)
+    return render(request, 'donation_service/recyclingcenter/edit_donation.html', content)

@@ -14,13 +14,13 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 
-<body>
-    <div class="mt-5">
+<body class="m-0 p-0">
+    <div class="mt-5" style="background-color: rgb(243, 243, 220);">
         <main class="container-fluid">
         {% if request.user.profile_type == 'D' %}
-            {% include 'authenticated_user/base/sidebar_dn.html' %}
+            {% include 'authenticated_user/base/navbar_dn.html' %}
         {% elif request.user.profile_type == 'R'  %}
-            {% include 'authenticated_user/base/sidebar_rc.html' %}
+            {% include 'authenticated_user/base/navbar_rc.html' %}
         {% endif %}
     
         {% block content %}

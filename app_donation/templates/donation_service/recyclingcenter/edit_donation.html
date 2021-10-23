@@ -1,1 +1,317 @@
-Oi
+{% extends 'donation_service/base/base.html' %}
+{% load bootstrap_filter %}
+
+{% block title %}.:Adicionar Materiais{% endblock %}
+
+{% block content %}
+<div class="col-md-10 mx-auto ps-5 pe-5">
+<div class="card-body w-75 mx-auto border-none">
+    <h1 class="text-end">Confirmar Atendimento</h1>
+</div>
+<form method="POST">
+    {% csrf_token %}
+    <div class="card w-75 mx-auto">
+        <!--div class="card-header border">
+            <h2>Dados do Ponto de Coleta</h2>
+        </div>
+        <div class="card-body row">
+            <div class="col-md-6">
+                <label class="h3">Código:</label>
+                {{ ca.recipient.code }}
+            </div>
+            <div class="col-md-6">
+                <label class="h3">Razão Social:</label>
+                {{ ca.recipient.first_name }} {{ ca.recipient.last_name }}
+            </div>
+            <div class="col-md-6">
+                <label class="h3">Telefone: </label>
+                {{ ca.recipient.phone }}
+            </div>
+            <div class="col-md-6">
+                <label class="h3">Email: </label>
+                {{ ca.recipient.email }}
+            </div>
+        </div-->
+
+        <div class="card-header border">
+            <h2>Dados do Doador</h2>
+        </div>
+        <div class="card-body row">
+            <div class="col-md-6">
+                <label class="h3">Código:</label>
+                {{ ca.requester.code }}
+            </div>
+            <div class="col-md-6">
+                <label class="h3">Nome:</label>
+                {{ ca.requester.first_name }} {{ ca.requester.last_name }}
+            </div>
+            <div class="col-md-6">
+                <label class="h3">Telefone: </label>
+                {{ ca.requester.phone }}
+            </div>
+            <div class="col-md-6">
+                <label class="h3">Email: </label>
+                {{ ca.requester.email }}
+            </div>
+        </div>
+
+        <!--div class="card-header border">
+            <h2>Endereço</h2>
+        </div>
+        <div class="card-body row mx-auto">
+            <div class="col-md-12">
+                <h5 class="text-primary fw-bold">{{ ca.address }}</h5>
+            </div>
+        </div-->
+
+        <div class="card-header border">
+            <h2>Agendamento</h2>
+        </div>
+        <div class="card-body row mx-auto">
+            <div class="col-md-6 ">
+                <label class="h3">Data:</label><br>
+                {{ ca.date }}
+            </div>
+            <div class="col-md-6">
+                <label class="h3">Hora:</label><br>
+                {{ ca.time }}
+            </div>
+        </div>
+
+        <!--div class="card-header border">
+            <h2>Confirmação</h2>
+        </div>
+        <div class="card-body row mx-auto">
+            <div class="col-md-12 ">
+                <h5 class="text-success fw-bold">Atendimento confirmado</h5>
+            </div>
+        </div-->
+
+        <div class="card-header border">
+            <h2>Registrar Materiais</h2>
+        </div>
+        <div id="material_forms" class="card-body row">
+            {{ materials_form.management_form}}
+            {% for mf in materials_form %}
+            <!--div id="add_mat-0" class="col-md-12 row">
+                <div id="name-0" class="col-md-3 pb-2">
+                    <label>Nome:</label>
+                    {{ mf.material_name|f_class:'form-control' }}
+                </div>
+                <div id="type-0" class="col-md-3 pb-2">
+                    <label>Tipo:</label>
+                    {{ mf.material_type|f_class:'form-control' }}
+                </div>
+                <div id="amount-0" class="col-md-2 pb-2">
+                    <label>Qtd (Kg):</label>
+                    {{ mf.amount|f_class:'form-control' }}
+                </div>
+                <div id="pts-0" class="col-md-2 pb-2">
+                    <label>Pts:</label>
+                    {{ mf.points|f_class:'form-control' }}
+            
+                </div>
+                <div id="delete-0" class="col-md-1 pb-2">
+                    <label></label>
+                    <input type="button" class="btn btn-danger" id="id_material_set-0-material_delete" value="Apagar" onclick="remove_material_form('0');">
+                </div>
+            </div-->
+            {{mf}}
+            {% endfor %}
+        </div>
+        <div class="col-md-6 pb-2 mx-auto text-center">
+            <button type="button" class="btn btn-success" onclick="add_material_form();">Aadicionar novo material</button>
+        </div>
+
+    </div>
+    <div class="card-body w-75 mx-auto ps-0">
+        <a href="{% url 'users_auth:userpage_rc' %}" class="btn btn-lg btn-outline-danger me-3">Cancelar</a>
+        <button type="submit" class="btn btn-lg btn-success">Confirmar</button>
+    </div>
+</form>
+</div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script> 
+
+    function add_tags(){
+        var total_forms = document.querySelector('#id_material_set-TOTAL_FORMS');
+
+        row = document.createElement("DIV");
+        row.id = "add_mat-" + total_forms.value;
+        row.className = 'col-md-12 row';
+        document.querySelector('#material_forms').appendChild(row)
+
+        nm_material = document.createElement("DIV");
+        nm_material.id = 'name-'+ total_forms.value;
+        nm_material.className = "col-md-3 pb-2";
+        document.querySelector('#' + row.id).appendChild(nm_material)
+
+        tp_material = document.createElement("DIV");
+        tp_material.id = 'type-'+ total_forms.value;
+        tp_material.className = "col-md-3 pb-2";
+        document.querySelector('#' + row.id).appendChild(tp_material)
+
+        am_material = document.createElement("DIV");
+        am_material.id = 'amount-'+ total_forms.value;
+        am_material.className = "col-md-2 pb-2";
+        document.querySelector('#' + row.id).appendChild(am_material)
+
+        pt_material = document.createElement("DIV");
+        pt_material.id = 'pts-'+ total_forms.value;
+        pt_material.className = "col-md-2 pb-2";
+        document.querySelector('#' + row.id).appendChild(pt_material)
+
+        dl_material = document.createElement("DIV");
+        dl_material.id = 'delete-'+ total_forms.value;
+        dl_material.className = "col-md-1 pb-2";
+        document.querySelector('#' + row.id).appendChild(dl_material)
+    }
+
+    function add_material_form(){
+        add_tags();
+        var total_forms = document.querySelector('#id_material_set-TOTAL_FORMS');
+
+        var lb_name = document.createElement('LABEL');
+        lb_name.innerHTML = "Nome:";
+        var ipt_name = document.querySelector('#id_material_set-0-material_name').cloneNode(true);
+        ipt_name.name = 'material_set-'+total_forms.value+'-material_name';
+        ipt_name.id = 'id_material_set-'+total_forms.value+'-material_name';
+        ipt_name.value = '';
+
+        var lb_type = document.createElement('LABEL');
+        lb_type.innerHTML = "Tipo:";
+        var ipt_type = document.querySelector('#id_material_set-0-material_type').cloneNode(true);
+        ipt_type.name = 'material_set-'+total_forms.value+'-material_type';
+        ipt_type.id = 'id_material_set-'+total_forms.value+'-material_type';
+        ipt_type.value = '';
+
+        var lb_amount = document.createElement('LABEL');
+        lb_amount.innerHTML = "Qtd (Kg):";
+        var ipt_amount = document.querySelector('#id_material_set-0-amount').cloneNode(true);
+        ipt_amount.name = 'material_set-'+total_forms.value+'-amount';
+        ipt_amount.id = 'id_material_set-'+total_forms.value+'-amount';
+        ipt_amount.value = '';
+        ipt_amount.setAttribute("onkeyup", "calc_points('"+total_forms.value+"')");
+
+        var lb_pts = document.createElement('LABEL');
+        lb_pts.innerHTML = "Pts:";
+        var ipt_pts = document.querySelector('#id_material_set-0-points').cloneNode(true);
+        ipt_pts.name = 'material_set-'+total_forms.value+'-points';
+        ipt_pts.id = 'id_material_set-'+total_forms.value+'-points';
+        ipt_pts.value = '';
+        ipt_pts.setAttribute("onclick", "calc_points('"+total_forms.value+"')");
+
+        var lb_delete = document.createElement('LABEL');
+        lb_delete.innerHTML = " ";
+        var bt_delete = document.createElement("INPUT");
+        bt_delete.innerHTML = "Remover";
+        bt_delete.className = "btn btn-danger";
+        bt_delete.type = 'button';
+        bt_delete.value = 'Apagar';
+        bt_delete.id = 'id_material_set-'+total_forms.value+'-material_delete';
+        bt_delete.setAttribute("onclick", "remove_material_form('"+total_forms.value+"')");
+
+        document.querySelector('#name-' + total_forms.value).appendChild(lb_name);
+        document.querySelector('#name-' + total_forms.value).appendChild(ipt_name);
+
+        document.querySelector('#type-' + total_forms.value).appendChild(lb_type);
+        document.querySelector('#type-' + total_forms.value).appendChild(ipt_type);
+
+        document.querySelector('#amount-' + total_forms.value).appendChild(lb_amount);
+        document.querySelector('#amount-' + total_forms.value).appendChild(ipt_amount);
+
+        document.querySelector('#pts-' + total_forms.value).appendChild(lb_pts);
+        document.querySelector('#pts-' + total_forms.value).appendChild(ipt_pts);
+        
+        document.querySelector('#delete-' + total_forms.value).appendChild(lb_delete);
+        document.querySelector('#delete-' + total_forms.value).appendChild(bt_delete);
+
+        total_forms.value = parseInt(total_forms.value) + 1;
+
+    }
+    
+    function sort_tags(id){
+        console.log("oi")
+        console.log(id)
+        let num_id = parseInt(id)+1;
+        
+        sorted_row = document.getElementById('add_mat-'+num_id);
+
+        if (sorted_row === null){
+    
+            return
+        }
+        
+        else{
+            sort_tags(num_id.toString());
+            
+            let row = document.getElementById('add_mat-'+num_id);
+            row.id = 'add_mat-'+id;
+
+            let nm_material = document.getElementById('name-'+num_id);
+            nm_material.id = 'name-'+id
+            let ipt_name = document.getElementById('id_material_set-'+num_id+'-material_name');
+            ipt_name.id = 'id_material_set-'+id+'-material_name';
+            ipt_name.name = 'material_set-'+id+'-material_name';
+
+
+            let tp_material = document.getElementById('type-'+num_id);
+            tp_material.id = 'type-'+id;
+            let ipt_type = document.getElementById('id_material_set-'+num_id+'-material_type');
+            ipt_type.id = 'id_material_set-'+id+'-material_type';
+            ipt_type.name = 'material_set-'+id+'-material_type';
+
+            let am_material = document.getElementById('amount-'+num_id);
+            am_material.id = 'amount-'+id;
+            let ipt_amount = document.getElementById('id_material_set-'+num_id+'-amount');
+            ipt_amount.id = 'id_material_set-'+id+'-amount';
+            ipt_amount.name = 'material_set-'+id+'-amount';
+            ipt_amount.setAttribute("onkeyup", "calc_points('"+id+"')");
+            
+            let pt_material = document.getElementById('pts-'+num_id);
+            pt_material.id = 'pts-'+id;
+            let ipt_pts = document.getElementById('id_material_set-'+num_id+'-points');
+            ipt_pts.id = 'id_material_set-'+id+'-points';
+            ipt_pts.name = 'material_set-'+id+'-points';
+            ipt_pts.setAttribute("onclick", "calc_points('"+id+"')");
+            
+            let dl_material = document.getElementById('delete-'+num_id);
+            dl_material.id = 'delete-'+id
+            let bt_delete = document.getElementById('id_material_set-'+num_id+'-material_delete');
+            bt_delete.id = 'id_material_set-'+id+'-material_delete';
+            bt_delete.setAttribute("onclick", "remove_material_form('"+id+"')");
+
+        }
+        
+    }
+
+    function remove_material_form(id){
+        var total_forms = document.querySelector('#id_material_set-TOTAL_FORMS');
+        let row = document.getElementById('add_mat-'+id);
+
+        if (parseInt(total_forms.value) === 1){
+            alert("Para doar tem que ter aguma materia, ne?");
+            return
+        }
+
+        row.id = 'delete'
+        sort_tags(id)
+    
+        row.parentNode.removeChild(row);
+        
+        total_forms.value = parseInt(total_forms.value) - 1;
+
+    }
+
+    function calc_points(id){
+        amount = document.getElementById('id_material_set-'+id+'-amount');
+        result = document.getElementById('id_material_set-'+id+'-points');
+        result.value = parseFloat(amount.value) * 10;
+    }
+</script>
+{% endblock %}
+

@@ -14,6 +14,9 @@ class CustomerServiceForm(forms.ModelForm):
     class Meta:
         model = CustomerService
         fields = '__all__'
+        widgets = {
+            'date': forms.TextInput(attrs={'type': 'date'}),
+        }
 
 
 class DonationForm(forms.ModelForm):

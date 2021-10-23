@@ -29,7 +29,7 @@ def userpage(request):
     content = {
         'calls': calls
     }
-    print(calls)
+    #print(calls)
     return render(request, 'authenticated_user/recyclingcenter/userpage.html', content)
 
 
@@ -71,7 +71,7 @@ def register(request):
                 break
             sufix = '0'+sufix
         post['code'] = prefix + sufix
-        print(post['code']) #Teste
+        #print(post['code']) #Teste
 
         post['address'] = None
         post['username'] = post['code']
@@ -83,7 +83,7 @@ def register(request):
         rc_form = RCCreationForm(request.POST)
         address_form = AddressForm(request.POST)
 
-        print(rc_form.is_valid(), address_form.is_valid()) #Teste
+        #print(rc_form.is_valid(), address_form.is_valid()) #Teste
 
         if rc_form.is_valid() and address_form.is_valid():
             address = address_form.save()

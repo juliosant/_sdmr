@@ -4,9 +4,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from django.http.response import HttpResponse
 from ..forms import DNCreationForm, LoginForm
 from datetime import datetime
+from django.db.models.query_utils import Q
+from threading import Thread
+from time import sleep
+from datetime import date, datetime
 
 
 # DN
@@ -25,8 +28,23 @@ def userpage(request):
             calls.append({'call': call, 'donation': donation})
         except:
             calls.append({'call': call, 'donation': None})
-            
-    return render(request, 'authenticated_user/donor/userpage.html', {'calls': calls})
+        
+        search = Q(
+            Q(requester=request.user.id)&
+            Q(status_service = '4')
+        )
+        success_donation = CustomerService.objects.filter(search).count()
+
+        search =  Q(requester=request.user.id)
+        all_donations = CustomerService.objects.filter(search).count()
+
+        content = {
+            'calls': calls,
+            'success_donation': success_donation, 
+            'all_donations': all_donations
+        }
+        
+    return render(request, 'authenticated_user/donor/userpage.html', content)
 
 
 def login_dn(request):
@@ -41,7 +59,7 @@ def login_dn(request):
             else:
                 messages.info(request, 'Usuário ou senha inválido')
                 return redirect('users_auth:login_dn')
-                #return HttpResponse("<h1>Não foi feito login</h1>")
+
     login_form = LoginForm()
     content = {
         'login_form': login_form
@@ -67,7 +85,7 @@ def register(request):
                 break
             sufix = '0'+sufix
         post['code'] = prefix + sufix
-        print(post['code']) #Teste
+        #print(post['code']) #Teste
 
         post['username'] = post['code']
         #post['first_name'] = None
@@ -77,7 +95,7 @@ def register(request):
 
         dn_form = DNCreationForm(request.POST)
 
-        print(dn_form.is_valid()) #Teste
+        #print(dn_form.is_valid()) #Teste
         if dn_form.is_valid():
             dn_form.save()          
             return redirect('users_auth:login_dn')
@@ -94,7 +112,9 @@ def register(request):
 def ranking(request):
 
     if request.user.donor.ranking_points == 0:
-        return HttpResponse('<h1>Faça uma doação para participar do ranking</h1>') # page temporária
+        messages.info(request, 'Faça uma doação para participar do ranking')
+        return redirect('users_auth:userpage_dn')
+        #return HttpResponse('<h1>Faça uma doação para participar do ranking</h1>') # page temporária
     
     ranking = Donor.objects.filter().order_by('-ranking_points').exclude(ranking_points=0)
     
@@ -106,8 +126,8 @@ def ranking(request):
         #print(f'#{p} {donor.first_name} {donor.last_name} - {donor.ranking_points}')
         r.append([str(p), donor])
     
-    for donor in r:
-        print(donor[0], donor[1].first_name)
+    #for donor in r:
+    #    print(donor[0], donor[1].first_name)
     content = {
         'ranking': ranking,
         'amount': amount,
@@ -115,3 +135,21 @@ def ranking(request):
     } 
     
     return render(request, 'authenticated_user/donor/ranking.html', content)
+
+
+def encerrar_ranking():
+    while True:
+        if date.today().weekday() == 5 and datetime.now().time().strftime('%H:%M') == '17:00':
+            donors = Donor.objects.all()
+            for donor in donors:
+                if donor.ranking_points != 0:
+                    donor.general_points += donor.ranking_points
+                    donor.ranking_points = 0
+                    donor.save() 
+        sleep(1) 
+
+"""-------------------"""
+
+func = Thread(target=encerrar_ranking)
+func.daemon = True
+func.start()
