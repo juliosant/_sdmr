@@ -152,9 +152,10 @@ def encerrar_ranking():
     global hh
     while True:
         hh = datetime.now().time().strftime('%H:%M')
-        if date.today().weekday() == 5 and datetime.now().time().strftime('%H:%M') == '17:00':
+        if date.today().weekday() == 6 and hh == '13:45':
             donors = Donor.objects.all()
             for donor in donors:
+                hh += ' a'
                 if donor.ranking_points != 0:
                     donor.general_points += donor.ranking_points
                     donor.ranking_points = 0
