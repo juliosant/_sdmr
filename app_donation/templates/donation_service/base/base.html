@@ -14,7 +14,11 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 
+{% if is_edit %}
+<body onload="change_calc();">
+{% else %}
 <body>
+{% endif %}
     <div class="mt-5">
         <main class="container-fluid">
         {% if request.user.profile_type == 'D' %}

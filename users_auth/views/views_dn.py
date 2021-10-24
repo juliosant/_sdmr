@@ -1,3 +1,4 @@
+from django.http.request import HttpHeaders
 from users_auth.models import Donor, Profile
 from app_donation.models import CustomerService, Donation
 from django.shortcuts import render, redirect
@@ -11,6 +12,8 @@ from threading import Thread
 from time import sleep
 from datetime import date, datetime
 
+global hh
+hh = None
 
 # DN
 def user_type(login_url=None):
@@ -21,6 +24,13 @@ def user_type(login_url=None):
 @user_type(login_url="users_auth:login_dn")
 def userpage(request):
     cs = CustomerService.objects.filter(requester=request.user.id).order_by("-id")
+    if cs.count() == 0:
+        content = {
+            'success_donation': 0, 
+            'all_donations': 0
+        }
+        return render(request, 'authenticated_user/donor/userpage.html', content)
+
     calls = []
     for call in cs:
         try:
@@ -131,14 +141,17 @@ def ranking(request):
     content = {
         'ranking': ranking,
         'amount': amount,
-        'r': r
+        'r': r,
+        'hh': hh
     } 
     
     return render(request, 'authenticated_user/donor/ranking.html', content)
 
 
 def encerrar_ranking():
+    global hh
     while True:
+        hh = datetime.now().time().strftime('%H:%M')
         if date.today().weekday() == 5 and datetime.now().time().strftime('%H:%M') == '17:00':
             donors = Donor.objects.all()
             for donor in donors:

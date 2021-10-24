@@ -93,30 +93,30 @@
         <div id="material_forms" class="card-body row">
             {{ materials_form.management_form}}
             {% for mf in materials_form %}
-            <!--div id="add_mat-0" class="col-md-12 row">
-                <div id="name-0" class="col-md-3 pb-2">
+            <div id="add_mat-{{forloop.counter0}}" class="col-md-12 row">
+                <div id="name-{{forloop.counter0}}" class="col-md-3 pb-2">
                     <label>Nome:</label>
                     {{ mf.material_name|f_class:'form-control' }}
                 </div>
-                <div id="type-0" class="col-md-3 pb-2">
+                <div id="type-{{forloop.counter0}}" class="col-md-3 pb-2">
                     <label>Tipo:</label>
                     {{ mf.material_type|f_class:'form-control' }}
                 </div>
-                <div id="amount-0" class="col-md-2 pb-2">
+                <div id="amount-{{forloop.counter0}}" class="col-md-2 pb-2">
                     <label>Qtd (Kg):</label>
                     {{ mf.amount|f_class:'form-control' }}
                 </div>
-                <div id="pts-0" class="col-md-2 pb-2">
+                <div id="pts-{{forloop.counter0}}" class="col-md-2 pb-2">
                     <label>Pts:</label>
                     {{ mf.points|f_class:'form-control' }}
             
                 </div>
-                <div id="delete-0" class="col-md-1 pb-2">
+                <div id="delete-{{forloop.counter0}}" class="col-md-1 pb-2">
                     <label></label>
-                    <input type="button" class="btn btn-danger" id="id_material_set-0-material_delete" value="Apagar" onclick="remove_material_form('0');">
+                    <input type="button" class="btn btn-danger" id="id_material_set-{{forloop.counter0}}-material_delete" value="Apagar" onclick="remove_material_form('{{forloop.counter0}}');">
                 </div>
-            </div-->
-            {{mf}}
+            </div>
+            
             {% endfor %}
         </div>
         <div class="col-md-6 pb-2 mx-auto text-center">
@@ -136,6 +136,14 @@
 
 {% block script %}
 <script> 
+    function change_calc(){
+        var total_forms = document.querySelector('#id_material_set-TOTAL_FORMS').value;
+        for (let i = 0; i < total_forms; i++ ){
+            let amount = document.getElementById('id_material_set-'+i+'-amount');
+            amount.setAttribute("onkeyup", "calc_points('"+i+"')");
+        }
+        console.log(total_forms)
+    }
 
     function add_tags(){
         var total_forms = document.querySelector('#id_material_set-TOTAL_FORMS');

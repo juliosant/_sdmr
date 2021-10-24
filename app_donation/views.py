@@ -5,7 +5,6 @@ from django.shortcuts import redirect, render
 from django.db.models.query_utils import Q
 from .forms import DonationForm, MaterialForm, SearchRCForm, CustomerServiceForm
 from .models import CustomerService, Donation, Material
-from time import sleep
 
 # Create your views here.
 def search_rc(request):
@@ -212,6 +211,7 @@ def confirm_donation(request, id):
 def edit_donation(request, id):
     ca = CustomerService.objects.get(id=id)
     donation = Donation.objects.get(customerService=ca)
+    
 
     if request.POST:
         post = request.POST.copy()
@@ -229,14 +229,22 @@ def edit_donation(request, id):
         materials_form_factory = inlineformset_factory(Donation, Material, form=MaterialForm)
         materials_form = materials_form_factory(request.POST, instance=donation)
 
-        #print(donation_form.is_valid(), materials_form.is_valid())
+        print(donation_form.is_valid(), materials_form.is_valid())
         if donation_form.is_valid() and materials_form.is_valid():
+            
+            donation_id = donation
+            materials_delete = Material.objects.filter(donation=donation_id)
+            for mat in materials_delete:
+                #print(f'{mat.material_name} {mat.material_type} {mat.amount} {mat.points}')
+                mat.delete()
 
             ca.status_service = CustomerService.STATUS_SERVICE_CHOICES[2][0]
+            donation.status_donation = Donation.STATUS_DONATION_CHOICES[3][0]
             ca.save(force_update=True)
+            donation.save(force_update=True)
 
-            donation_ins = donation_form.save()
-            materials_form.instance = donation_ins
+            donation = donation_form.save(commit=False)
+            #materials_form.instance = donation
             materials_form.save()
 
             return redirect('users_auth:userpage_rc')
@@ -245,11 +253,10 @@ def edit_donation(request, id):
     materials_form_factory = inlineformset_factory(Donation, Material, form=MaterialForm, extra=0)
     materials_form = materials_form_factory(instance=donation)
 
-
     content = {
         'ca': ca,
         'donation_form': donation_form,
         'materials_form': materials_form,
-        'count': 0
+        'is_edit': True
     }
     return render(request, 'donation_service/recyclingcenter/edit_donation.html', content)
