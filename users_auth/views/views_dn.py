@@ -1,4 +1,5 @@
 from django.http.request import HttpHeaders
+from django.http.response import HttpResponse
 from users_auth.models import Donor, Profile
 from app_donation.models import CustomerService, Donation
 from django.shortcuts import render, redirect
@@ -152,14 +153,16 @@ def encerrar_ranking():
     global hh
     while True:
         hh = datetime.now().time().strftime('%H:%M')
-        if date.today().weekday() == 6 and hh == '13:35':
+        if date.today().weekday() == 0 and hh == '17:20':
             donors = Donor.objects.all()
             for donor in donors:
                 hh += ' a'
                 if donor.ranking_points != 0:
                     donor.general_points += donor.ranking_points
                     donor.ranking_points = 0
-                    donor.save() 
+                    donor.save()
+                    print('a')
+            return HttpResponse("")
         sleep(1) 
 
 """-------------------"""
