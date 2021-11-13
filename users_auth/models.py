@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.deletion import CASCADE
 
 # Create your models here.
 class Profile(AbstractUser):
@@ -32,3 +33,18 @@ class RecyclingCenter(Profile):
     corporate_name = models.CharField(max_length=200)
     address = models.OneToOneField(Address, on_delete=models.CASCADE, null=True, blank=True)
 
+
+class Coupon(models.Model):
+    SITUATION_CHOICE = [
+        ('A', 'DISPONÍVEL'),
+        ('E', "EXPIRADO"),
+        ('U', 'INDISPONÍVEL'),
+    ]
+
+    donor_id = models.ForeignKey(Donor, on_delete=CASCADE)
+    value = models.DecimalField(max_digits=7, decimal_places=2, null=False, blank=False)
+    pass_key = models.CharField(max_length=200, null=False, blank=False)
+    used = models.BooleanField(default=False)
+    expiration_date = models.DateTimeField()
+    situation = models.CharField(max_length=1, choices=SITUATION_CHOICE)
+    #creation_date = models.DateTimeField(auto_now_add=True)

@@ -1,17 +1,17 @@
-from django.http.request import HttpHeaders
-from django.http.response import HttpResponse
-from users_auth.models import Donor, Profile
+from users_auth.models import Coupon, Donor, Profile
 from app_donation.models import CustomerService, Donation
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from ..forms import DNCreationForm, LoginForm
+from ..forms import CouponForm, DNCreationForm, LoginForm
 from datetime import datetime
 from django.db.models.query_utils import Q
 from threading import Thread
 from time import sleep
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+import random
+import string
 
 global hh
 hh = None
@@ -153,7 +153,7 @@ def encerrar_ranking():
     global hh
     while True:
         hh = datetime.now().time().strftime('%H:%M')
-        if date.today().weekday() == 0 and hh == '17:20':
+        if date.today().weekday() == 0 and hh >= '19:30':
             donors = Donor.objects.all()
             for donor in donors:
                 hh += ' a'
@@ -161,8 +161,6 @@ def encerrar_ranking():
                     donor.general_points += donor.ranking_points
                     donor.ranking_points = 0
                     donor.save()
-                    print('a')
-            return HttpResponse("")
         sleep(1) 
 
 """-------------------"""
@@ -170,3 +168,93 @@ def encerrar_ranking():
 func = Thread(target=encerrar_ranking)
 func.daemon = True
 func.start()
+
+
+@login_required(login_url='users_auth:login_dn')
+@user_type(login_url="users_auth:login_dn")
+def coupons_page(request):
+    donor = Donor.objects.get(profile_ptr=request.user)
+
+    coupon_form = CouponForm()
+     #print(type(donor.general_points))
+    
+    if request.POST:
+        if float(request.POST['value'])*10 <= donor.general_points:     
+        
+            post = request.POST.copy()
+            post['donor_id'] = donor
+
+            post['pass_key'] = ''
+            for x in range(0,3):
+                post['pass_key'] += random.choice(string.ascii_letters)
+            post['pass_key'] += '-'+str(post['value'])
+            post['expiration_date'] = str(date.today() + timedelta(days=3)) + ' ' + str(datetime.now().time())
+            post['situation'] = 'A'
+            request.POST = post
+            
+
+            coupon_form = CouponForm(request.POST)
+            if coupon_form.is_valid():
+                coupon_form.save()
+                donor.general_points = donor.general_points - float(request.POST['value'])*10
+                print(float(request.POST['value'])*10)
+                donor.save()
+                messages.info(request, "Cupom criado!")
+                return redirect('users_auth:coupons')
+        else:
+            messages.info(request, "Pontos necesário para criar cupom maior que pontuação geral!")
+            return redirect('users_auth:coupons')
+
+    # Buscar disponíveis
+    search = Q(
+            Q(donor_id = donor)&
+            Q(situation = 'A')&
+            Q(used = False)
+        )
+    available_coupons = Coupon.objects.filter(search).order_by('-id')
+    if available_coupons.count() == 0:
+        available_coupons = None 
+    
+    # Buscar já utilizados
+    search = Q(
+            Q(donor_id = donor)&
+            Q(situation = 'U')&
+            Q(used = True)
+        )
+        
+    used_coupons = Coupon.objects.filter(search)
+    if used_coupons.count() == 0:
+        used_coupons = None 
+
+    # Buscar expirados
+    search = Q(
+            Q(donor_id = donor)&
+            Q(situation = 'E')
+        )
+    expired_coupons = Coupon.objects.filter(search)
+    if expired_coupons.count() == 0:
+        expired_coupons = None 
+
+    coupons = Coupon.objects.filter(search).order_by('-id')
+    if coupons.count() == 0:
+        coupons = None 
+    
+    content ={
+        'current_points': donor.general_points,
+        'coupon_form': coupon_form,
+        'available_coupons': available_coupons,
+        'used_coupons': used_coupons,
+        'expired_coupons': expired_coupons,
+    }
+    
+    return render(request, 'authenticated_user/donor/coupons.html', content)
+
+
+def remove_coupon(request, id):
+    coupon = Coupon.objects.get(id=id)
+    donor = Donor.objects.get(profile_ptr=request.user)
+    donor.general_points = donor.general_points + float(coupon.value * 10)
+    donor.save()
+    coupon.delete()
+    messages.info(request, f"Cupom removido! {coupon.value*10} pontos recuperados")
+    return redirect('users_auth:coupons')

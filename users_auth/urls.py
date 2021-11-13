@@ -20,7 +20,11 @@ urlpatterns = [
     path('logout_rc', views_rc.logout_rc, name='logout_rc'),
     path('register_rc/', views_rc.register, name='register_rc'),
 
-    # temporário
+    # rankng
     path('ranking/', views_dn.ranking, name='ranking'),
+    
+    #coupons
+    path('coupons/', views_dn.coupons_page, name='coupons'),
+    path('remove_coupon/<id>/', views_dn.remove_coupon, name='remove_coupon'),
 
 ]

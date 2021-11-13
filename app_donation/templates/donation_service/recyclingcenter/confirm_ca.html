@@ -87,6 +87,13 @@
                 {{ ca_form.confirmed|f_class:'form-control w-25 mx-auto text-center' }}
             </div>
         </div>
+        <div class="card-body row">
+            <div class="col-md-12 text">
+                <label id='rr_label' class="h3">Motivo:</label>
+                {{ ca_form.return_recipient|f_class:'form-control' }}
+            </div>
+        </div>
+        
     </div>
     <div class="card-body w-75 mx-auto ps-0">
         <a href="{% url 'users_auth:userpage_rc' %}" class="btn btn-lg btn-outline-danger me-3">Cancelar</a>
@@ -95,4 +102,26 @@
 </form>
 </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function change_textearea(){
+        confirmed = document.getElementById('id_confirmed');
+        
+        return_recipient = document.getElementById('id_return_recipient');
+        return_recipient_label = document.getElementById('rr_label');
+
+        console.log(confirmed.value === 'False')
+        console.log(confirmed.value === 'True')
+        if (confirmed.value === 'False'){
+            return_recipient.style.display = 'inline';
+            return_recipient_label = style.display = 'inline';
+        } 
+        else {
+            return_recipient.style.display = 'none';
+            return_recipient_label.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}

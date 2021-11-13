@@ -1,0 +1,304 @@
+{% extends 'authenticated_user/base/base.html' %}
+{% load bootstrap_filter %}
+
+{% block title %}.:Meus Cupons{% endblock %}
+
+{% block content %}
+{{ created_coupon }}
+<div class="col-md-10 ps-0 pe-0 mt-3 mx-auto text-success">
+    <div class="card mx-auto w-75 mb-1 border border-0 bg-transparent">
+        <a class="h4 text-success text-end" style="text-decoration: none;"
+            href="{% url 'users_auth:userpage_dn' %}">Voltar</a>
+    </div>
+    {% if messages %}
+    <div class="card card-body mx-auto p-0 border-0 bg-transparent">
+        {% for message in messages %}
+        {% if message.message == 'Cupom criado!' %}
+        <div class="mt-3 w-75 mx-auto alert alert-success alert-dismissible fade show text-center" role="alert">
+        {% else %}
+        <div class="mt-3 w-75 mx-auto alert alert-danger alert-dismissible fade show text-center" role="alert">
+        {% endif %}
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <h1 class="text-center text-success fw-bold">Cupons</h1>
+    <div class="card mx-auto w-75 p-3 mb-3 border-success shadow">
+
+       
+        <style>
+            #coin{
+                color: rgb(156, 224, 156);
+            }
+        </style>
+        <div class="card card-body border-0 text-end">
+            <div class="row">
+                <div class="d-flex justify-content-center col-md-6">
+                    <svg id="coin" xmlns="http://www.w3.org/2000/svg" width="78" height="78" fill="currentColor" class="bi bi-piggy-bank-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M7.964 1.527c-2.977 0-5.571 1.704-6.32 4.125h-.55A1 1 0 0 0 .11 6.824l.254 1.46a1.5 1.5 0 0 0 1.478 1.243h.263c.3.513.688.978 1.145 1.382l-.729 2.477a.5.5 0 0 0 .48.641h2a.5.5 0 0 0 .471-.332l.482-1.351c.635.173 1.31.267 2.011.267.707 0 1.388-.095 2.028-.272l.543 1.372a.5.5 0 0 0 .465.316h2a.5.5 0 0 0 .478-.645l-.761-2.506C13.81 9.895 14.5 8.559 14.5 7.069c0-.145-.007-.29-.02-.431.261-.11.508-.266.705-.444.315.306.815.306.815-.417 0 .223-.5.223-.461-.026a.95.95 0 0 0 .09-.255.7.7 0 0 0-.202-.645.58.58 0 0 0-.707-.098.735.735 0 0 0-.375.562c-.024.243.082.48.32.654a2.112 2.112 0 0 1-.259.153c-.534-2.664-3.284-4.595-6.442-4.595zm7.173 3.876a.565.565 0 0 1-.098.21.704.704 0 0 1-.044-.025c-.146-.09-.157-.175-.152-.223a.236.236 0 0 1 .117-.173c.049-.027.08-.021.113.012a.202.202 0 0 1 .064.199zm-8.999-.65A6.613 6.613 0 0 1 7.964 4.5c.666 0 1.303.097 1.893.273a.5.5 0 1 0 .286-.958A7.601 7.601 0 0 0 7.964 3.5c-.734 0-1.441.103-2.102.292a.5.5 0 1 0 .276.962zM5 6.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0z"/>
+                    </svg>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="pe-5">Pontuação Geral:</h5> <h2 class="fw-bold pe-5">{{ current_points }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!--div class="align-items-center m-2 ">
+            <button type="button" class="btn btn-success p-2" style="text-decoration: none;"
+                onclick="restart_field_value();" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Novo cupom
+            </button>
+        </div-->
+
+        <!--Modal-->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Criar cupon</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" class="needs-validation" onsubmit="return true;">
+                        {% csrf_token %}
+                        <div class="modal-body">
+
+                            <input type="text" name="new_points_general" class="form-control text-end h3" readonly
+                                value="{{ current_points }}">
+                            <div class="row m-3">
+                                <div class="col-md-3"><button type="button" class="btn btn-success" onclick="click_button_currency(50)">R$ 50</button></div>
+                                <div class="col-md-3"><button type="button" class="btn btn-success" onclick="click_button_currency(100)">R$ 100</button></div>
+                                <div class="col-md-3"><button type="button" class="btn btn-success" onclick="click_button_currency(200)">R$ 200</button></div>
+                                <div class="col-md-3"><button type="button" class="btn btn-success" onclick="click_button_currency(400)">R$ 400</button></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="text-start">Outro valor do cupom (R$):</label>
+                                    {{ coupon_form.value|f_class:'form-control text-end' }}                              
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-start">Pontos à usar:</label>
+                                    <input id="removed_points" readonly
+                                        class="form-control bg-transparent border border-0 text-center">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger"
+                                data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Criar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!---->
+
+        <!--table class="table text-center">
+            <thead>
+                <tr>
+                    <th scope="col">VALOR</th>
+                    <th scope="col">USADO</th>
+                    <th scope="col">CÓDIGO DE USO</th>
+                    <th scope="col">DATA DE EXPIRAÇÂO</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% if coupons != None %}
+                {% for coupon in coupons %}
+                <tr>
+                    <td> R$ {{ coupon.value }}</td>
+                    {% if coupon.used == True %}
+                        <td>SIM</td>
+                    {% else %}
+                        <td>NÃO</td>
+                    {% endif %}
+                    <td>{{ coupon.pass_key }}</td>
+                    <td>{{ coupon.expiration_date }}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table-->
+    </div>
+
+    <div class="card mx-auto bg-transparent border-0 w-75 align-items-end m-3 mt-1">
+        <button type="button" class="btn btn-success p-2 fw-bold" style="text-decoration: none;"
+            onclick="restart_field_value();" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            +<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-tags-fill" viewBox="0 0 16 16">
+                <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                <path d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043-7.457-7.457z"/>
+            </svg>
+            <h5 class="fw-bold">Novo cupom</h5>
+        </button>
+    </div>
+
+    <div class="card card-body w-75 mb-3 mx-auto p-0 border-success shadow">
+        <h3>Disponíveis: ({{ available_coupons|length }} cupons)</h3>
+        <hr class=" m-0">
+        <style>
+            #avalilable{
+                background-color: rgb(70, 177, 70);
+            }
+        </style>
+        <div class="row border-0 p-3">
+            <!--FOR-->
+            {% if available_coupons != None %}
+            {% for coupon in available_coupons %}
+            
+            <div id="avalilable" class="col-md-3 card text-light border-dark fw-bold text-center">
+                <div class="card-header row bg-transparent border-0">
+                    <div class="col p-0 text-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tags-fill" viewBox="0 0 16 16">
+                            <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                            <path d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043-7.457-7.457z"/>
+                        </svg>
+                        Cupon
+                    </div> 
+                    <div class="col text-end">
+                        <a href="{% url 'users_auth:remove_coupon' coupon.id %}" title="Restaurar pontos" class="text-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body h3 p-0">R$ {{ coupon.value }}</div>
+                <div class="card-footer bg-transparent border-0">
+                    Código de uso <br>
+                    <a  id="clipboardCopy" class="text-light" tabindex="0" data-toggle="tooltip" title="Copiar">
+                        {{ coupon.pass_key }} 
+                    </a>
+                    <input type="hidden" id="{{ coupon.counter }}" readonly value="{{ coupon.pass_key }} ">
+                </div>
+            
+            </div>
+
+            {% endfor %}
+            {% endif %}
+            <!--ENDFOR-->
+        </div>
+    
+    </div>
+    <div class="card card-body w-75 mb-3 mx-auto p-0 border-success shadow">
+        <h3>Expirados: ({{ expired_coupons|length }} cupons)</h3>
+        <hr class=" m-0">
+        <style>
+            #expired{
+                background-color: rgb(177, 166, 70);
+            }
+        </style>
+        <div class="row border-0 p-3">
+            <!--FOR-->
+            {% if expired_coupons != None %}
+            {% for coupon in expired_coupons %}
+            
+            <div id="expired" class="col-md-3 card text-light border-dark fw-bold text-center">
+                <div class="card-header row bg-transparent border-0">
+                    <div class="col p-0 text-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tags-fill" viewBox="0 0 16 16">
+                            <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                            <path d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043-7.457-7.457z"/>
+                        </svg>
+                        Cupon
+                    </div> 
+                    <!--div class="col text-end">
+                        <a href="" class="text-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </a>
+                    </div-->
+                </div>
+                <div class="card-body h3 p-0">R$ {{ coupon.value }}</div>
+                <div class="card-footer bg-transparent border-0"> <a class="text-light" href="{% url 'users_auth:remove_coupon' coupon.id %}">Recuperar pontos</a></div>
+            
+            </div>
+            {% endfor %}
+            {% endif %}
+            <!--ENDFOR-->
+        </div>
+    </div>
+    <div class="card card-body w-75 mb-3 mx-auto p-0 border-success shadow">
+        <h3>Usados: ({{ used_coupons|length }} cupons)</h3>
+        <hr class=" m-0">
+        <style>
+            #unavalilable{
+                background-color: rgb(104, 102, 88);
+            }
+        </style>
+        <div class="row border-0 p-3">
+            <!--FOR-->
+            {% if used_coupons != None %}
+            {% for coupon in used_coupons %}
+            
+            <div id="unavalilable" class="col-md-3 card text-light border-dark fw-bold text-center">
+                <div class="card-header row bg-transparent border-0">
+                    <div class="col p-0 text-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tags-fill" viewBox="0 0 16 16">
+                            <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                            <path d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043-7.457-7.457z"/>
+                        </svg>
+                        Cupon
+                    </div> 
+                    <!--div class="col text-end">
+                        <a href="" class="text-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </a>
+                    </div-->
+                </div>
+                <div class="card-body h3 p-0">R$ {{ coupon.value }}</div>
+                
+                <div class="card-footer bg-transparent border-0"> <a type="disable" class="text-light" href="#">Detalhar compra</a></div>
+            
+            </div>
+            {% endfor %}
+            {% endif %}
+            <!--ENDFOR-->
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    function restart_field_value() {
+        gen_coupon = document.getElementById('generated_coupon');
+        removed_points = document.getElementById('removed_points');
+        generated_coupon.value = 0
+        removed_points.value = 0
+
+
+    }
+
+    function calc_removed_points() {
+        gen_coupon = document.getElementById('generated_coupon');
+        removed_points = document.getElementById('removed_points');
+        if (gen_coupon.value === ''){
+            console.log("GATO")
+            removed_points.value = 0
+        }
+        else{
+            removed_points.value = parseFloat(gen_coupon.value) * 10
+        }
+    }
+
+    function click_button_currency(value){
+        gen_coupon = document.getElementById('generated_coupon');
+        removed_points = document.getElementById('removed_points');
+        gen_coupon.value = parseFloat(value)
+        removed_points.value = parseFloat(value) * 10
+    }
+
+</script>
+{% endblock %}
