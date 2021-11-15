@@ -1,16 +1,22 @@
 {% extends 'donation_service/base/base.html' %}
 {% load bootstrap_filter %}
 
-{% block title %}.:Adicionar Materiais{% endblock %}
+{% block title %}.:Revisar Materiais{% endblock %}
 
 {% block content %}
 <div class="col-md-10 mx-auto ps-5 pe-5">
+
+    <div class=" mt-3 card mx-auto w-75 mb-1 border border-0 bg-transparent">
+        <a class="h4 text-success text-end" style="text-decoration: none;"
+            href="{% url 'users_auth:userpage_rc' %}">Voltar</a>
+    </div>
+
 <div class="card-body w-75 mx-auto border-none">
-    <h1 class="text-end">Confirmar Atendimento</h1>
+    <h1 class="text-center text-success fw-bold">Revisar Materiais</h1>
 </div>
-<form method="POST">
+<form method="POST" class="h5">
     {% csrf_token %}
-    <div class="card w-75 mx-auto">
+    <div class="card w-75 mx-auto border-0 text-success">
         <!--div class="card-header border">
             <h2>Dados do Ponto de Coleta</h2>
         </div>
@@ -33,24 +39,21 @@
             </div>
         </div-->
 
-        <div class="card-header border">
+        <div class="card-header border-0 bg-transparent pb-0">
             <h2>Dados do Doador</h2>
+            <hr class="m-0">
         </div>
         <div class="card-body row">
-            <div class="col-md-6">
-                <label class="h3">Código:</label>
-                {{ ca.requester.code }}
-            </div>
-            <div class="col-md-6">
-                <label class="h3">Nome:</label>
+            <div class="col-md-12 mb-2">
+                <label class="fw-bold">Nome:</label>
                 {{ ca.requester.first_name }} {{ ca.requester.last_name }}
             </div>
-            <div class="col-md-6">
-                <label class="h3">Telefone: </label>
+            <div class="col-md-6 mb-2">
+                <label class="fw-bold">Telefone: </label>
                 {{ ca.requester.phone }}
             </div>
-            <div class="col-md-6">
-                <label class="h3">Email: </label>
+            <div class="col-md-6 mb-2">
+                <label class="fw-bold">Email: </label>
                 {{ ca.requester.email }}
             </div>
         </div>
@@ -64,16 +67,17 @@
             </div>
         </div-->
 
-        <div class="card-header border">
-            <h2>Agendamento</h2>
+        <div class="card-header border-0 bg-transparent pb-0 pt-4">
+            <h3>Agendamento</h3>
+            <hr class="m-0">
         </div>
-        <div class="card-body row mx-auto">
+        <div class="card-body row">
             <div class="col-md-6 ">
-                <label class="h3">Data:</label><br>
+                <label class="fw-bold">Data:</label>
                 {{ ca.date }}
             </div>
             <div class="col-md-6">
-                <label class="h3">Hora:</label><br>
+                <label class="fw-bold">Hora:</label>
                 {{ ca.time }}
             </div>
         </div>
@@ -87,8 +91,9 @@
             </div>
         </div-->
 
-        <div class="card-header border">
-            <h2>Registrar Materiais</h2>
+        <div class="card-header border-0 pb-0 pt-5" style="background-color: rgb(243, 243, 220);">
+            <h3>Atualizar Materiais</h3>
+            <hr class="m-0">
         </div>
         <div id="material_forms" class="card-body row">
             {{ materials_form.management_form}}
@@ -124,10 +129,16 @@
         </div>
 
     </div>
-    <div class="card-body w-75 mx-auto ps-0">
-        <a href="{% url 'users_auth:userpage_rc' %}" class="btn btn-lg btn-outline-danger me-3">Cancelar</a>
-        <button type="submit" class="btn btn-lg btn-success">Confirmar</button>
+    <hr class="w-75 mx-auto m-2">
+    <div class="card-body w-75 boder mx-auto pt-2 p-0 row">
+        <div class="col p-0">
+            <a href="{% url 'users_auth:userpage_rc' %}" class="btn btn-lg btn-outline-danger me-3">Cancelar</a>
+        </div>
+        <div class="col p-0 d-flex justify-content-end">
+            <button type="submit" class="btn btn-lg btn-success">Confirmar</button>
+        </div>
     </div>
+
 </form>
 </div>
 </div>
@@ -318,7 +329,13 @@
     function calc_points(id){
         amount = document.getElementById('id_material_set-'+id+'-amount');
         result = document.getElementById('id_material_set-'+id+'-points');
-        result.value = parseFloat(amount.value) * 10;
+        if (amount.value === ''){
+            console.log("GATO")
+            result.value = 0
+        }
+        else{
+            result.value = parseFloat(amount.value) * 5;
+        }
     }
 </script>
 {% endblock %}

@@ -11,40 +11,68 @@
 </style>
 
 <div class="col-md-10 mx-auto ps-5 pe-5">
-<form method="POST">
-    {% csrf_token %}
-    <div class="card card-body w-75 mx-auto">
-        <!--input type="text" class="form-control"-->
-        {{ search_rc_form.search|f_class:'form-control' }}
-        <div class="d-flex content-justify-center mx-auto p-1">
-            <a href="{% url 'users_auth:userpage_dn' %}" class="btn btn-light mx-auto m-2 border">Voltar</a>
-            <button class="btn btn-success mx-auto m-2">Pesquisar</button>
-        </div>
+    <div class="card mx-auto w-75 mb-1 border border-0 bg-transparent">
+        <a class="h4 text-success text-end" style="text-decoration: none;"
+            href="{% url 'users_auth:userpage_dn' %}">Voltar</a>
     </div>
     {% if messages %}
-    <div class="card card-body mx-auto w-75 p-0 mt-0 mb-0 border-0">
+    <div class="mt-0 card card-body mx-auto p-0 border-0 bg-transparent">
         {% for message in messages %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {% if message.message == 'Cupom criado!' %}
+        <div class="mt-3 w-75 mx-auto alert alert-success alert-dismissible fade show text-center" role="alert">
+        {% else %}
+        <div class="mt-3 w-75 mx-auto alert alert-danger alert-dismissible fade show text-center" role="alert">
+        {% endif %}
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endfor %}
     </div>
     {% endif %}
-
-    <div class="card card-body w-75 mx-auto">
-        {% if result is not None %}
+<form method="POST">
+    {% csrf_token %}
+    <div class="card mt-0 card-body w-75 mx-auto bg-transparent border-0">
+        <!--input type="text" class="form-control"-->
+        {{ search_rc_form.search|f_class:'form-control' }}
+        <div class="d-flex content-justify-center mx-auto p-1">
+            <!--a href="{% url 'users_auth:userpage_dn' %}" class="btn btn-light mx-auto m-2 border">Voltar</a-->
+            <button class="btn btn-success btn-lg mx-auto m-2 fw-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+                Pesquisar
+            </button>
+        </div>
+    </div>
+    
+        {% if result is not None and count_result != 0 %}
+        <div class="card card-body w-75 mx-auto">
             {% for r in result %}
                 <a href="{% url 'app_donation:customer_service' r.id %}" class="text-decoration-none">
                     <div class="cardcard-body">
-                        <h4 class="text-success">{{ r.code }} - {{ r.recyclingcenter.corporate_name }}</h4>
+                        <h4 class="text-success">{{ r.recyclingcenter.corporate_name }}</h4>
                         <p class="text-success">{{ r.about }}</p>
                     </div>
                 </a>
                 <hr>
             {% endfor %}
+        </div>
+        {% elif count_result == 0 %}
+        <div style="color: rgb(142, 199, 142);" class="text-center mx-auto w-50 d-flex justify-content-center">
+            <h2 class="fw-bold">Nenhum ponto de coleta encontrado</h2>
+        </div>
+        {% else %}
+        <div style="color: rgb(142, 199, 142);" class="mt-5 text-center mx-auto w-50 d-flex justify-content-center">
+            <svg class="text-center" xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>  
+            <br>
+        </div >
+        <div style="color: rgb(142, 199, 142);" class="text-center mx-auto w-50 d-flex justify-content-center">
+            <h2 class="fw-bold">Pesquisar pontos de coleta</h2>
+        </div>
         {% endif %}
-    </div>
+    
 </div>
 </div>
 </form>

@@ -9,6 +9,7 @@ from .models import CustomerService, Donation, Material
 # Create your views here.
 def search_rc(request):
     result = None
+    count_result = None
 
     if request.method == "POST":
         if len(request.POST['search']) >= 3:
@@ -19,6 +20,7 @@ def search_rc(request):
                 # Falta razao social. Criar entidade RecycleCenter
             )
             result = Profile.objects.filter(search)
+            count_result = result.count()
 
         else:
             messages.info(request, "Digite no mínimo 3 caracteres")
@@ -27,7 +29,8 @@ def search_rc(request):
     
     content = {
         'search_rc_form': search_rc_form,
-        'result': result
+        'result': result,
+        'count_result': count_result
     }
     return render(request, 'donation_service/donor/search_rc.html', content)
 
@@ -62,7 +65,7 @@ def customer_service(request, id):
         #print(ca_form.is_valid()) # teste
         if ca_form.is_valid():
             ca_form.save()
-            return redirect('app_donation:search_rc')
+            return redirect('users_auth:userpage_dn')
 
     ca_form = CustomerServiceForm()
     content = {

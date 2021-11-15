@@ -6,7 +6,11 @@
 {% block content %}
 {{ hh }}
 <div class="col-md-10 ps-0 pe-0 mt-5 mx-auto">
-    <h1 class="text-center">RANKING</h1>
+    <div class="card mx-auto w-75 mb-1 border border-0 bg-transparent">
+        <a class="h4 text-success text-end" style="text-decoration: none;"
+            href="{% url 'users_auth:userpage_dn' %}">Voltar</a>
+    </div>
+    <h1 class="text-center text-success fw-bold">Ranking Geral</h1>
     {% for donor in r %}
     {% if request.user.donor.id != donor.1.id %}
     <div class="card mx-auto w-50 p-3 mb-1 border border-dark text-center">    
@@ -45,9 +49,6 @@
         <hr class="mx-auto w-50">
     {% endif %}
     {% endfor %}
-    <div class="card mx-auto w-50 pt-3 mb-1 border border-0 bg-transparent">
-        <a class="h4 text-success text-center" style="text-decoration: none;" href="{% url 'users_auth:userpage_dn' %}">Voltar</a>
-    </div>
 </div>
 </div>
 {% endblock %}
