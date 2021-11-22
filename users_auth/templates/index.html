@@ -1,0 +1,243 @@
+
+<!doctype html>
+{% load static %}
+<html lang="pt">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"-->
+    <link rel="stylesheet" href="{% static 'users_auth/css/style.css' %}" type="text/css">
+    <!--link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>_SDMR</title>
+  </head>
+  <body>
+
+    <!-- Menu -->
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light" id="nav">
+            <div class="container-fluid">
+                <div class="ml-4">
+                    <a href="index.html" class="navbar-brand">
+                        <img class="rounded-circle mr-1" src="{% static 'http://source.unsplash.com/60x60/?recycling' %}"  src="http://source.unsplash.com/60x60/?recycling">
+                        <a class="navbar-brand text-white " href="#"><h4>_SDMR</h4></a>
+                    </a>
+                    <button class="navbar-toggler" data-toggle="collapse" data-target="#menuPrincipal">
+                        <span class="navbar-toggler-icon btn-outline-light"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="menuPrincipal">
+                    <ul class="navbar-nav ml-auto" >
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active text-white">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link text-white">Sobre nós</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link text-white">Beneficios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a type="button" href="#" class="btn btn-outline-light ml-4" data-bs-toggle="modal" data-bs-target="#login">Entrar</a>
+                            
+                        <!-- Modal -->
+                        <div class="modal fade" id="login" tabindex="-1" aria-labelledby="loginLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-success" id="loginLabel">Como quer autenticar?</h5>
+                                <button type="button" class="btn-close bg-transparent border-0" data-bs-dismiss="modal" aria-label="Close">X</button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row text-center">
+                                        <div class="col-md-6 mx-auto m-2">
+                                            <a class="btn btn-success px-3 fw-bold" href="{% url 'users_auth:login_rc' %}">Ponto de Coleta</a>
+                                        </div>
+                                        
+                                        <div class="col-md-6 ">
+                                            <a class="btn btn-success px-5 m-2 fw-bold" href="{% url 'users_auth:login_dn' %}">Doador</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                <!--button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button-->
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>     <!-- Menu -->
+
+    <!-- 1 seção barra de pesquisa -->
+    <section  id="secao1">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 d-flex mb-4" >
+                    <div class="align-self-center">
+                        <h1 class="display-4">O que posso descartar?</h1>
+                        <p>O Recycling é uma ferramenta online que facilita o descarte de seus materias com diversos Beneficios.</p>
+                        
+                    </div>
+                </div>
+                <div class="col-md-4 d-none d-md-block">
+                    <div class="card w-100 border-0 bg-transparent p-0">
+                        <img class="ml-5" src="{% static 'users_auth/img/menino.png' %}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> <!-- 1 seção barra de pesquisa -->
+
+    <!-- 2 seção resultado pontos de Reciclagem -->
+    <section id="secao2" class="caixa">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-12">
+                <form class="mt-4 row mb-5">
+                    <div class=" col-12 card p-0 m-0 bg-transparent border-0">
+                        <input type="text" aria-colspan="p-0 m-0" id="inputTag" placeholder="Digite os materiais separados por espaço" class="form-control form-control-lg border-success">
+                    <div class="tagContainer">
+                        <!--input type="text" aria-colspan="p-0 m-0" placeholder="Digite os materiais separados por espaço" class="form-control"-->
+                    </div>
+                    </div>
+                    <div class="col-12 p-0 input-group-append d-flex justify-content-center mt-3">
+                        <button type="submit" class="btn btn-success btn-lg">Pesquisar</button>
+                    </div>
+                </form>
+            </div>
+                <div class="col-sm-12 text-dark text-center my-3">
+                    <h3 class="text-success">Pontos de Reciclagem Proximos</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="card border-success mb-3">
+                        <img src="{% static 'users_auth/img/logo2.jpg' %}" class="card-img-top " alt="...">
+                        <div class="card-body text-success">
+                          <h5 class="card-title ">Ecoenel</h5>
+                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                          <a href="#" class="btn btn-success">Conheça o Ponto</a>
+                        </div>
+                      </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card border-success mb-3" >
+                        <img src="{% static 'users_auth/img/logo2.jpg' %}" class="card-img-top" alt="...">
+                        <div class="card-body text-success">
+                          <h5 class="card-title">Ecoponto - Conjunto Esperança</h5>
+                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                          <a href="#" class="btn btn-success">Conheça o Ponto</a>
+                        </div>
+                      </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card border-success mb-3" >
+                        <img src="{% static 'users_auth/img/logo2.jpg' %}" class="card-img-top" alt="...">
+                        <div class="card-body text-success">
+                          <h5 class="card-title">Ecoponto - Jóquei Clube</h5>
+                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                          <a href="#" class="btn btn-success">Conheça o Ponto</a>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </section>  <!-- 2 seção resultado pontos de Reciclagem -->
+
+    <!-- 3 seção informativo "como funciona" -->
+    <section class="caixa" style="background: #9EC489;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 d-flex">
+                    <div class="align-self-center">
+                        <h2 class="text-light">Como funciona o Recycling?</h2>
+                        <p class="text-light">
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                            when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                        </p>
+                        <a href="" class="btn btn-outline-light">Veja mais</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <img src="{% static 'users_auth/img/img1.png' %}" class="img-fluid ml-5 d-none d-md-block">
+                </div>
+            </div>
+        </div>
+    </section> <!-- 3 seção informativo "como funciona" -->
+
+    <!-- 4 seção descrição de pontos fortes -->
+    <section class="caixa">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <img src="{% static 'users_auth/img/logo2.jpg' %}" class="img-fluid mb-3">
+              <h4 class="text-success">Fácil de usar</h4>
+              <p class="text-success">
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled
+              </p>
+            </div>
+            <div class="col-md-4">
+              <img src="{% static 'users_auth/img/logo2.jpg' %}" class="img-fluid mb-3">
+              <h4 class="text-success">Ajude o meio ambiente</h4>
+              <p class="text-success">
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled
+              </p>
+            </div>
+            <div class="col-md-4">
+              <img src="{% static 'users_auth/img/logo2.jpg' %}" class="img-fluid mb-3">
+              <h4 class="text-success">Troque seus pontos por benefícios</h4>
+              <p class="text-success">
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled
+              </p>
+            </div>
+          </div>
+        </div>
+    </section> <!-- 4 seção descrição de pontos fortes -->
+
+    <!-- Menu inferior - rodapé -->
+    <footer style="background: #98bd84">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8 mt-4 mb-4 d-flex">
+                    <p>
+                        <a class="text-light" href="#">Home</a>
+                        <a class="text-light" href="#">Sobre Nós</a>
+                        <a class="text-light" href="#">Benefícios</a>
+                    </p>
+                </div>
+                <div class="col-md-4 mt-4 mb-4 justify-content-end d-flex">
+                    <a href="" class="btn btn-outline-light">
+                      <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="" class="btn btn-outline-light ml-2">
+                      <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="" class="btn btn-outline-light ml-2">
+                      <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="" class="btn btn-outline-light ml-2">
+                      <i class="fab fa-youtube"></i>
+                    </a>
+                  </div>
+            </div>
+        </div>
+    </footer>  <!-- Menu inferior - rodapé -->
+
+    <script src="{% static 'users_auth/js/script.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+</body>
+</html>

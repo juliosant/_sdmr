@@ -1,13 +1,12 @@
-from app_donation.models import CustomerService
+
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.http.response import HttpResponse
-from django.db.models.query_utils import Q
-from .forms import LoginForm, ProfileChangeForm, ProfileCreationForm, ProfileForm
 
 # Create your views here.
 
-# DN
+# index
+def index_page(request):
+    return render(request, 'index.html')
+'''
 def userpage(request):
     #search = Q()
 
@@ -54,3 +53,4 @@ def register_profile(request):
         'profile_form': profile_form
     }
     return render(request, 'management_user/register/register.html', content)
+'''

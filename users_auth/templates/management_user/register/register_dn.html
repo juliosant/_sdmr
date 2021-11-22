@@ -69,7 +69,8 @@
             {{ dn_form.profile_type|f_class:'form-control' }}-->
 
         </div>
-        <button type="submit" class="btn btn-success">Cadastrar</button>
+        <button type="submit" class="btn btn-success fw-bold">Cadastrar</button>
+        <a href="{% url 'users_auth:login_dn' %}" class="text-center py-2 text-success fw-bold" style="text-decoration: none;">Voltar</a>
     </div>
 </form>
 

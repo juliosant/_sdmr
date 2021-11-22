@@ -118,6 +118,23 @@ def register(request):
     return render(request, 'management_user/register/register_dn.html', content)
 
 
+def my_donations(request):
+    cs = CustomerService.objects.filter(requester=request.user.id).order_by("-id")
+    calls = []
+    for call in cs:
+        try:
+            donation = Donation.objects.get(customerService=call)
+            calls.append({'call': call, 'donation': donation})
+        except:
+            calls.append({'call': call, 'donation': None})
+    
+    content = {
+        'calls': calls
+    }
+
+    return render(request, 'authenticated_user/donor/my_donations.html', content)
+
+
 @login_required(login_url='users_auth:login_dn')
 @user_type(login_url="users_auth:login_dn")
 def ranking(request):
@@ -258,3 +275,4 @@ def remove_coupon(request, id):
     coupon.delete()
     messages.info(request, f"Cupom removido! {coupon.value*10} pontos recuperados")
     return redirect('users_auth:coupons')
+
