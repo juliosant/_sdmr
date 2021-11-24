@@ -1,7 +1,7 @@
 {% extends 'management_user/base/base.html' %}
 {% load bootstrap_filter %}
 
-{% block title %}.:Login{% endblock %}
+{% block title %}.:Registrar Ponto Coleta{% endblock %}
 
 {% block content %}
 <style>
@@ -10,11 +10,12 @@
         margin-bottom: 3%;
     }
 </style>
-<form method="POST">
+<form method="POST" id="formRegister" class="text-success fw-bold">
     {% csrf_token %}
     <div class="card mx-auto px-auto w-50">
         <div class="card-header h2 text-success">Registrar Ponto de Coleta</div>
         <div class="card-body">
+  
             <!--label>Código*</label>
             {{ rc_form.code|f_class:'form-control' }}-->
             <label>Razão Social</label>
@@ -61,6 +62,19 @@
             <label>Sobre mim</label>
             {{ rc_form.about|f_class:'form-control' }}
             
+
+            <div class="row px-2 py-0">
+                <div class="col-md-6 mx-auto mt-3">
+                    <h6 class="text-center" >Materiais que aceita receber</h6>
+                    <input type="text" oninput="lowerWord(event);" id="inputTag" placeholder="Digite os materiais separados enter" class="form-control">
+                </div>
+                <div class="col-md-12 mx-auto mt-3 card card-body border-1 m-5 p-1 text-light" style="background-color: rgb(221, 255, 221);" >
+                    <div class="tagContainer">
+                        <input type="hidden" name="receiverTags" id="receiverTags">
+                    </div>
+                </div>
+            </div>
+
             <!--label>Nome*</label>
             {{ rc_form.first_name|f_class:'form-control' }}-->
             <!--label>Sobrenome*</label>
@@ -77,11 +91,9 @@
                     {{ rc_form.password2|f_class:'form-control' }}
                 </div>
             </div>
-            <!--label>Tipo de Usuário*</label>
-            {{ rc_form.profile_type|f_class:'form-control' }}-->
 
         </div>
-        <button type="submit" class="btn btn-success fw-bold">Cadastrar</button>
+        <button id="buttonRegisterRC" onclick="receiveTags();" type="submit" class="w-50 mx-auto btn btn-success fw-bold" >Cadastrar</button>
         <a href="{% url 'users_auth:login_rc' %}" class="text-center py-2 text-success fw-bold" style="text-decoration: none;">Voltar</a>
     </div>
 </form>

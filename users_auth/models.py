@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.deletion import CASCADE
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 class Profile(AbstractUser):
@@ -29,9 +30,11 @@ class Address(models.Model):
     state = models.CharField(max_length=100)
     complement = models.CharField(max_length=200)
 
+
 class RecyclingCenter(Profile):
     corporate_name = models.CharField(max_length=200)
     address = models.OneToOneField(Address, on_delete=models.CASCADE, null=True, blank=True)
+    materials = ArrayField(models.CharField(max_length=100), null=True)
 
 
 class Coupon(models.Model):

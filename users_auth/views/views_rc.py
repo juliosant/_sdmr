@@ -71,7 +71,13 @@ def register(request):
                 break
             sufix = '0'+sufix
         post['code'] = prefix + sufix
-        #print(post['code']) #Teste
+
+        #print(request.POST)
+        #print(post['receiverTags']) #Teste
+
+        tags = request.POST['receiverTags'].split(',')
+        post['materials'] = tags
+
 
         post['address'] = None
         post['username'] = post['code']

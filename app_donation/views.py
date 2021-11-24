@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.forms.models import inlineformset_factory
-from users_auth.models import Donor, Profile
+from users_auth.models import Donor, Profile, RecyclingCenter
 from django.shortcuts import redirect, render
 from django.db.models.query_utils import Q
 from .forms import DonationForm, MaterialForm, SearchRCForm, CustomerServiceForm
@@ -12,19 +12,27 @@ def search_rc(request):
     count_result = None
 
     if request.method == "POST":
+        tags = request.POST['receiverTags'].split(',')
+        print(tags)
+
+        result = RecyclingCenter.objects.filter(materials__overlap=tags)
+        count_result = result.count()
+
+        #result = Profile.objects.filter(id_overlap=rcs)
+        '''
         if len(request.POST['search']) >= 3:
             search = Q(
                 Q(profile_type__exact='R') &
                 Q(code__contains=request.POST['search'])|
                 Q(recyclingcenter__corporate_name__contains=request.POST['search'])
-                # Falta razao social. Criar entidade RecycleCenter
+                # Falta razao social. Criar entsidade RecycleCenter
             )
             result = Profile.objects.filter(search)
             count_result = result.count()
 
         else:
             messages.info(request, "Digite no mínimo 3 caracteres")
-
+        '''
     search_rc_form = SearchRCForm()
     
     content = {

@@ -10,7 +10,7 @@
         width: 18rem;
     }
 </style>
-<form method="POST">
+<form method="POST" class="fw-bold text-success">
     {% csrf_token %}
     {% if messages %}
     <div class="card card-body mx-auto p-0 border-0">
@@ -21,9 +21,9 @@
         </div>
         {% endfor %}
     </div>
-    <div class="card mx-auto px-auto mt-0">
+    <div class="card mx-auto px-auto mt-0 shadow">
     {% else %}
-    <div class="card mx-auto px-auto">
+    <div class="card mx-auto px-auto shadow">
     {% endif %}
     
         <div class="card-header h2 text-success">Login</div>
@@ -39,7 +39,8 @@
                 <a href="{% url 'users_auth:register_rc' %}" class="text-success text-decoration-none">Não tem conta? Registre-se</a>
             </div>
         </div>
-        <button type="submit" class="btn btn-success">Entrar</button>
+        <button type="submit" class="btn btn-success w-75 mx-auto fw-bold">Entrar</button>
+        <a href="{% url 'users_auth:index' %}" class="text-center py-2 text-success fw-bold" style="text-decoration: none;">Voltar</a>
     </div>
     <!--{% if messages %}
     <div class="card card-body mx-auto mt-1 p-0 border-0">
@@ -52,4 +53,7 @@
     </div>
     {% endif %}-->
 </form>
+{% endblock %}
+
+{% block script %}
 {% endblock %}

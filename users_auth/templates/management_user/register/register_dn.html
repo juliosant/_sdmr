@@ -21,7 +21,7 @@
         margin-bottom: 3%;
     }
 </style>
-<form method="POST">
+<form method="POST" id="formRegister" class="text-success fw-bold">
     {% csrf_token %}
     <div class="card mx-auto px-auto w-50">
         <div class="card-header h2 text-success">Registrar Doador</div>
@@ -69,18 +69,10 @@
             {{ dn_form.profile_type|f_class:'form-control' }}-->
 
         </div>
-        <button type="submit" class="btn btn-success fw-bold">Cadastrar</button>
+        <button type="submit" class="w-50 mx-auto btn btn-success fw-bold">Cadastrar</button>
         <a href="{% url 'users_auth:login_dn' %}" class="text-center py-2 text-success fw-bold" style="text-decoration: none;">Voltar</a>
     </div>
 </form>
 
 {% endblock %}
 
-{% block script %}
-<script>
-    function upperWord(id) {
-        var x = document.getElementById(id);
-        x.value = x.value.toUpperCase();
-    }
-</script>
-{% endblock %}

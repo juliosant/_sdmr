@@ -5,7 +5,14 @@ from django.shortcuts import render, redirect
 
 # index
 def index_page(request):
+    print(request.POST)
+    if request.POST:
+        print(request.POST['receiverTags'])
+        tags = request.POST['receiverTags'].split(',')
+        print(tags)
     return render(request, 'index.html')
+
+
 '''
 def userpage(request):
     #search = Q()

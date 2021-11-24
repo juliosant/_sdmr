@@ -1,5 +1,6 @@
 {% extends 'donation_service/base/base.html' %}
 {% load bootstrap_filter %}
+{% load  static %}
 
 {% block title %}Buscar Pontos{% endblock %}
 
@@ -29,14 +30,18 @@
         {% endfor %}
     </div>
     {% endif %}
-<form method="POST">
+<form method="POST" id="donation">
     {% csrf_token %}
     <div class="card mt-0 card-body w-75 mx-auto bg-transparent border-0">
         <!--input type="text" class="form-control"-->
         {{ search_rc_form.search|f_class:'form-control' }}
+
+        <div class="tagContainer text-light">
+            <input type="hidden" name="receiverTags" id="receiverTags">
+        </div>
         <div class="d-flex content-justify-center mx-auto p-1">
             <!--a href="{% url 'users_auth:userpage_dn' %}" class="btn btn-light mx-auto m-2 border">Voltar</a-->
-            <button class="btn btn-success btn-lg mx-auto m-2 fw-bold">
+            <button class="btn btn-success btn-lg mx-auto m-2 fw-bold" onclick="receiveTags();">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                 </svg>
@@ -50,11 +55,18 @@
             {% for r in result %}
                 <a href="{% url 'app_donation:customer_service' r.id %}" class="text-decoration-none">
                     <div class="cardcard-body">
-                        <h4 class="text-success">{{ r.recyclingcenter.corporate_name }}</h4>
+                        <h4 class="text-success">{{ r.corporate_name }}</h4>
                         <p class="text-success">{{ r.about }}</p>
                     </div>
                 </a>
                 <hr>
+                <div class="row row-cols-auto border-1 p-0">
+                    {% for material in r.materials %}
+                    <div class="col d-flex content-justify-start">
+                        <button type="button" class="btn btn-success py-0 px-1 fw-bold">{{ material }}</button>
+                    </div>
+                    {% endfor %}
+                </div>
             {% endfor %}
         </div>
         {% elif count_result == 0 %}
@@ -76,4 +88,13 @@
 </div>
 </div>
 </form>
+{% endblock %}
+
+{% block script %}
+    
+    <!--script src="{% static 'users_auth/js/base.js' %}"></script-->
+    <script src="{% static 'donation/js/donation.js' %}"></script>
+    <script src="{% static 'users_auth/js/script.js' %}"></script>
+
+    
 {% endblock %}
