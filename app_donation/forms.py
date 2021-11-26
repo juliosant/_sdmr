@@ -2,7 +2,7 @@ from .models import CustomerService, Donation, Material
 from django import forms
 
 class SearchRCForm(forms.Form):
-    search = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Buscar por endereço, nome ou código', 'oninput':'lowerWord(event)', 'id':"inputTag",}), required=False)
+    search = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Buscar por nome de material que deseja doar', 'oninput':'lowerWord(event)', 'id':"inputTag",}), required=False)
 
 
 class CustomerServiceForm(forms.ModelForm):

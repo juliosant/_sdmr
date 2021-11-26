@@ -1,16 +1,27 @@
 
 from django.shortcuts import render, redirect
+from ..models import RecyclingCenter
 
 # Create your views here.
 
 # index
 def index_page(request):
+    result = None
+    count_result = None
     print(request.POST)
-    if request.POST:
-        print(request.POST['receiverTags'])
+    result = None
+    if request.method == "POST":
         tags = request.POST['receiverTags'].split(',')
         print(tags)
-    return render(request, 'index.html')
+
+        result = RecyclingCenter.objects.filter(materials__overlap=tags)
+        count_result = result.count()
+        print(result)
+    content = {
+        'result': result,
+        'count_result': count_result
+    }
+    return render(request, 'index.html', content)
 
 
 '''

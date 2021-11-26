@@ -56,7 +56,8 @@
                 <a href="{% url 'app_donation:customer_service' r.id %}" class="text-decoration-none">
                     <div class="cardcard-body">
                         <h4 class="text-success">{{ r.corporate_name }}</h4>
-                        <p class="text-success">{{ r.about }}</p>
+                        <h6 class="text-success">{{ r.address.public_place|title }}, {{ r.address.number }}, {{ r.address.district|title }} - {{ r.address.city|title }}, {{ r.address.state|title }}</h6>
+                        <p class="text-success">{{ r.about|lower|capfirst }}</p>
                     </div>
                 </a>
                 <hr>
