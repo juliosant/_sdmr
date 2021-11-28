@@ -1,0 +1,55 @@
+{% extends 'authenticated_user/base/base.html' %}
+{% load bootstrap_filter %}
+
+{% block title %}.:Doações pendentes{% endblock %}
+
+{% block content %}
+
+<div class="col-md-10 mx-auto p-2 mt-5 mb-3 border border-0 bg-transparent" style="background-color: rgb(255, 255, 255);">
+    <div class="card mx-auto w-75 mb-1 border border-0 bg-transparent">
+        <a class="h4 text-success text-end" style="text-decoration: none;"
+            href="{% url 'users_auth:userpage_rc' %}">Voltar</a>
+    </div>
+
+    <div>
+        <h1 class="text-center text-success fw-bold">Doações Pendentes</h1>
+        {% if calls|length != 0 %}
+            {% for call in calls %}
+                <h1>{{call.call.status_donation}}</h1>
+                {% if call.call.status_service == '0' %}
+                    <a href="{% url 'app_donation:confirm_ca' call.call.id %}" class="card mx-auto w-50 p-2 text-decoration-none" style="background-color: rgb(218, 253, 229);">
+                        <h5 class="text-success">
+                            <div class="card-header m-0 bg-transparent px-0">
+                                <label for="" class="fw-bold p-0 m-0">Doação: {{ call.call.id }}</label> 
+                            </div>
+                            <label for="" class="fw-bold">Solicitante:</label> {{ call.call.requester.first_name|title }} {{ call.call.requester.last_name|title }} <br>
+                            <label for="" class="fw-bold">Status:</label> {{ call.call.get_status_service_display }}
+                        </h5>
+                    </a>
+                {% elif call.call.status_service == '1' %}
+                    <a href="{% url 'app_donation:donation' call.call.id %}" class="card mx-auto w-50 p-2 text-decoration-none" style="background-color: rgb(172, 252, 165);">
+                        <h5 class="text-success">
+                            <div class="card-header m-0 bg-transparent px-0">
+                                <label for="" class="fw-bold p-0 m-0">Doação: {{ call.call.id }}</label> 
+                            </div>
+                            <label for="" class="fw-bold">Solicitante:</label> {{ call.call.requester.first_name|title }} {{ call.call.requester.last_name|title }} <br>
+                            <label for="" class="fw-bold">Status:</label> {{ call.call.get_status_service_display }}. Receber Materiais
+                        </h5>
+                    </a>
+                {% elif call.call.status_service == '2' and call.donation.status_donation == '1' %}
+                <a href="{% url 'app_donation:edit_donation' call.call.id %}" class="card mx-auto w-50 p-2 text-decoration-none" style="background-color: rgb(82, 236, 203);">
+                    <h5 class="text-success">
+                        <div class="card-header m-0 bg-transparent px-0">
+                            <label for="" class="fw-bold p-0 m-0">Doação: {{ call.call.id }}</label> 
+                        </div>
+                        <label for="" class="fw-bold">Solicitante:</label> {{ call.call.requester.first_name|title }} {{ call.call.requester.last_name|title }} <br>
+                        <label for="" class="fw-bold">Status:</label> Doador Solicitou Revisão
+                    </h5>
+                </a>
+
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

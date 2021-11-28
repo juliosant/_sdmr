@@ -1,0 +1,33 @@
+{% extends 'authenticated_user/base/base.html' %}
+{% load bootstrap_filter %}
+
+{% block title %}.:Minhas doações{% endblock %}
+
+{% block content %}
+
+<div class="col-md-10 mx-auto p-2 mt-5 mb-3 border border-0 bg-transparent" style="background-color: rgb(255, 255, 255);">
+    <div class="card mx-auto w-75 mb-1 border border-0 bg-transparent">
+        <a class="h4 text-success text-end" style="text-decoration: none;"
+            href="{% url 'users_auth:userpage_dn' %}">Voltar</a>
+    </div>
+
+    <div>
+        <h1 class="text-center text-success fw-bold">Doações Pendentes</h1>
+        {% if calls|length != 0 %}
+            {% for call in calls %}
+                {% if call.call.status_service == '2' and call.donation.status_donation == '3' %}
+                <a href="{% url 'app_donation:confirm_donation' call.call.id %}" class="card mx-auto w-50 p-2 m-1 text-decoration-none" style="background-color: rgb(82, 236, 203);">
+                    <h5 class="text-success">
+                        <div class="card-header m-0 bg-transparent px-0">
+                            <label for="" class="fw-bold p-0 m-0">ID Doação: {{ call.call.id }}</label> 
+                        </div>
+                        <label for="" class="fw-bold">Para:</label> {{ call.call.recipient.recyclingcenter.corporate_name|title }} {{ call.call.requester.last_name|title }} <br>
+                        <label for="" class="fw-bold">Status:</label> {{ call.call.get_status_service_display }}
+                    </h5>
+                </a>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

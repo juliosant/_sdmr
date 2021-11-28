@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.forms.models import inlineformset_factory
 from users_auth.models import Donor, Profile, RecyclingCenter
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.db.models.query_utils import Q
 from .forms import DonationForm, MaterialForm, SearchRCForm, CustomerServiceForm
 from .models import CustomerService, Donation, Material
@@ -73,6 +74,7 @@ def customer_service(request, id):
         #print(ca_form.is_valid()) # teste
         if ca_form.is_valid():
             ca_form.save()
+            messages.success(request, 'Solicitação de agendamento efetuado com sucesso!')
             return redirect('users_auth:userpage_dn')
 
     ca_form = CustomerServiceForm()
@@ -94,7 +96,12 @@ def confirm_ca(request, id):
        
             ca.confirmed = True
             ca.status_service = CustomerService.STATUS_SERVICE_CHOICES[1][0]
-        
+
+            ca.save(force_update=True)
+
+            #return redirect(f"app_donation:donation/{ca.id}/")
+            return redirect(reverse('app_donation:donation', kwargs={"id": ca.id}))
+
         elif request.POST['confirmed'] == 'False':
 
             ca.confirmed = False
@@ -168,7 +175,7 @@ def confirm_donation(request, id):
                 ca.points_service = ca.points_service + m.points
     
             #print(ca.points_service)
-
+            messages.success(request, f'Doação Concluída! Você ganhou {ca.points_service} pontos por essa doação')
             requester.ranking_points = requester.ranking_points + ca.points_service
             requester.save()
         

@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from ..forms import AddressForm, LoginForm, RCCreationForm
+from django.db.models.query_utils import Q
 from django.contrib import messages
 from datetime import datetime
 
@@ -18,6 +19,15 @@ def user_type(login_url=None):
 def userpage(request):
     cs = CustomerService.objects.filter(recipient=request.user.id).order_by("-id")
     
+    if cs.count() == 0:
+        content = {
+            'success_donation': 0, 
+            'scheduled_donations': 0,
+            'pending_donations': 0
+        }
+        
+        return render(request, 'authenticated_user/recyclingcenter/userpage.html', content)
+
     calls = []
     for call in cs:
         try:
@@ -25,9 +35,40 @@ def userpage(request):
             calls.append({'call': call, 'donation': donation})
         except:
             calls.append({'call': call, 'donation': None})
-    
+
+        search = Q(
+            Q(recipient=request.user.id)&
+            Q(status_service = '4')
+        )
+        success_donation = CustomerService.objects.filter(search).count()
+
+        search =  Q(recipient=request.user.id)
+        
+        scheduled_donations = CustomerService.objects.filter(search).count() # faltou implementar doação avulsa
+
+
+        search = Q(
+            Q(recipient=request.user.id)&
+            Q(
+                Q(status_service = '0')|
+                Q(status_service = '1')|
+                #Q(status_service = '2')
+                Q(
+                    Q(status_service = '2')&
+                    Q(donation__status_donation = '1')
+                    
+                )
+            )
+        )
+        pending_donations = CustomerService.objects.filter(search).count()
+
+        
+
     content = {
-        'calls': calls
+        'calls': calls,
+        'success_donation': success_donation,
+        'scheduled_donations': scheduled_donations,
+        'pending_donations': pending_donations
     }
     #print(calls)
     return render(request, 'authenticated_user/recyclingcenter/userpage.html', content)
@@ -95,6 +136,7 @@ def register(request):
             address = address_form.save()
             rc = rc_form.save(commit=False)
             rc.address = address
+            messages.success(request, 'Doador criado. Utilize seu email e senha para acessar')
             rc.save()
                         
             return redirect('users_auth:login_rc')
@@ -106,3 +148,41 @@ def register(request):
         'address_form': address_form
     }
     return render(request, 'management_user/register/register_rc.html', content)
+
+
+@login_required(login_url='users_auth:login_rc')
+@user_type(login_url="users_auth:login_rc")
+def my_donations_rc(request):
+    cs = CustomerService.objects.filter(recipient=request.user.id).order_by("-id")
+    calls = []
+    for call in cs:
+        try:
+            donation = Donation.objects.get(customerService=call)
+            calls.append({'call': call, 'donation': donation})
+        except:
+            calls.append({'call': call, 'donation': None})
+    
+    content = {
+        'calls': calls
+    }
+
+    return render(request, 'authenticated_user/recyclingcenter/my_donations.html', content)
+
+
+
+def pending_donations(request):
+    cs = CustomerService.objects.filter(recipient=request.user.id).order_by("-id")
+    
+    calls = []
+    for call in cs:
+        try:
+            donation = Donation.objects.get(customerService=call)
+            calls.append({'call': call, 'donation': donation})
+        except:
+            calls.append({'call': call, 'donation': None})
+
+    content = {
+        'calls': calls,
+    }
+
+    return render(request, 'authenticated_user/recyclingcenter/pending_donations.html', content)

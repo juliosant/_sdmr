@@ -17,11 +17,14 @@ urlpatterns = [
     path('logout_dn/', views_dn.logout_dn, name='logout_dn'),
     path('register_dn/', views_dn.register, name='register_dn'),
     path('my_donations/', views_dn.my_donations, name="my_donations"),
+    path('pending_donations_dn/', views_dn.pending_donations, name='pending_donations_dn'),
 
     path('userpage_rc/', views_rc.userpage, name="userpage_rc"),
     path('login_rc/', views_rc.login_rc, name='login_rc'),
     path('logout_rc', views_rc.logout_rc, name='logout_rc'),
     path('register_rc/', views_rc.register, name='register_rc'),
+    path('pending_donations/', views_rc.pending_donations, name='pending_donations'),
+    path('my_donations_rc/', views_rc.my_donations_rc, name='my_donations_rc'),
 
     # rankng
     path('ranking/', views_dn.ranking, name='ranking'),

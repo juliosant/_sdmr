@@ -15,7 +15,11 @@
     {% if messages %}
     <div class="card card-body mx-auto p-0 border-0">
         {% for message in messages %}
+        {% if message.tags == "success" %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {% else %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {% endif %}
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>

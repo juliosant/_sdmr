@@ -30,7 +30,8 @@ def userpage(request):
     if cs.count() == 0:
         content = {
             'success_donation': 0, 
-            'all_donations': 0
+            'all_donations': 0,
+            'pending_donations': 0
         }
         return render(request, 'authenticated_user/donor/userpage.html', content)
 
@@ -48,13 +49,24 @@ def userpage(request):
         )
         success_donation = CustomerService.objects.filter(search).count()
 
+        search = Q(
+            Q(requester=request.user.id)&
+            Q(  
+                Q(status_service = '2')&
+                Q(donation__status_donation = '3')    
+            )
+            
+        )
+        pending_donations = CustomerService.objects.filter(search).count()
+
         search =  Q(requester=request.user.id)
         all_donations = CustomerService.objects.filter(search).count()
 
         content = {
             'calls': calls,
             'success_donation': success_donation, 
-            'all_donations': all_donations
+            'all_donations': all_donations,
+            'pending_donations': pending_donations
         }
         
     return render(request, 'authenticated_user/donor/userpage.html', content)
@@ -70,7 +82,7 @@ def login_dn(request):
                 login(request, user)
                 return redirect('users_auth:userpage_dn')
             else:
-                messages.info(request, 'Usuário ou senha inválido')
+                messages.error(request, 'Usuário ou senha inválido')
                 return redirect('users_auth:login_dn')
 
     login_form = LoginForm()
@@ -110,6 +122,7 @@ def register(request):
 
         #print(dn_form.is_valid()) #Teste
         if dn_form.is_valid():
+            messages.success(request, 'Doador criado. Utilize seu email e senha para acessar')
             dn_form.save()          
             return redirect('users_auth:login_dn')
                 
@@ -120,6 +133,8 @@ def register(request):
     return render(request, 'management_user/register/register_dn.html', content)
 
 
+@login_required(login_url='users_auth:login_dn')
+@user_type(login_url="users_auth:login_dn")
 def my_donations(request):
     cs = CustomerService.objects.filter(requester=request.user.id).order_by("-id")
     calls = []
@@ -135,6 +150,26 @@ def my_donations(request):
     }
 
     return render(request, 'authenticated_user/donor/my_donations.html', content)
+
+
+@login_required(login_url='users_auth:login_dn')
+@user_type(login_url="users_auth:login_dn")
+def pending_donations(request):
+    cs = CustomerService.objects.filter(requester=request.user.id).order_by("-id")
+    
+    calls = []
+    for call in cs:
+        try:
+            donation = Donation.objects.get(customerService=call)
+            calls.append({'call': call, 'donation': donation})
+        except:
+            calls.append({'call': call, 'donation': None})
+
+    content = {
+        'calls': calls,
+    }
+
+    return render(request, 'authenticated_user/donor/pending_donations.html', content)
 
 
 @login_required(login_url='users_auth:login_dn')
@@ -239,6 +274,10 @@ def coupons_page(request):
      #print(type(donor.general_points))
     
     if request.POST:
+        if float(request.POST['value']) == 0:
+            messages.warning(request, "Não é possível criar cupom sem valor!")
+            return redirect('users_auth:coupons')
+
         if float(request.POST['value'])*10 <= donor.general_points:     
         
             post = request.POST.copy()
@@ -260,10 +299,10 @@ def coupons_page(request):
                 donor.general_points = donor.general_points - float(request.POST['value'])*10
                 #print(float(request.POST['value'])*10)
                 donor.save()
-                messages.info(request, "Cupom criado!")
+                messages.success(request, "Cupom criado!")
                 return redirect('users_auth:coupons')
         else:
-            messages.info(request, "Pontos necesário para criar cupom maior que pontuação geral!")
+            messages.error(request, "Pontos necesário para criar cupom maior que pontuação geral!")
             return redirect('users_auth:coupons')
 
     # Buscar disponíveis
