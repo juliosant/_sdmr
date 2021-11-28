@@ -5,15 +5,20 @@
 
 {% block content %}
 <style>
-    .card {
-        margin-top: 10%;
+    #title_page {
+        margin-top: 8%;
+    }
+    #message{
+        margin-top: 5%;
+    }
+    .card{
         width: 18rem;
     }
 </style>
 <form method="POST" class="fw-bold text-success">
     {% csrf_token %}
     {% if messages %}
-    <div class="card card-body mx-auto p-0 border-0">
+    <div id="message" class="card card-body mx-auto p-0 border-0">
         {% for message in messages %}
         {% if message.tags == "success" %}
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -25,11 +30,15 @@
         </div>
         {% endfor %}
     </div>
-    <div class="card mx-auto px-auto mt-0 shadow">
+    <h2 id="title_page" class="text-success mt-0 text-center">Login</h2>
+    <div class="card mx-auto px-auto mt-0 shadow" style="background-color: rgb(222, 243, 192);">
     {% else %}
-    <div class="card mx-auto px-auto shadow">
+    <h2 id="title_page" class="text-success text-center">Login</h2>
+    <div class="card mx-auto px-auto shadow border" style="background-color: rgb(222, 243, 192);">
     {% endif %}
-        <div class="card-header h2 text-success">Login</div>
+        <div class="card-header h2 text-success bg-transparent border-0">
+            Doador  
+        </div>
         <div class="card-body">
 
             <label>Usuário</label>

@@ -136,7 +136,7 @@ def register(request):
             address = address_form.save()
             rc = rc_form.save(commit=False)
             rc.address = address
-            messages.success(request, 'Doador criado. Utilize seu email e senha para acessar')
+            messages.success(request, 'Ponto de Coleta criado. Utilize seu email e senha para acessar')
             rc.save()
                         
             return redirect('users_auth:login_rc')
