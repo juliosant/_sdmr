@@ -216,7 +216,7 @@ def close_ranking():
     global hh
     while True:
         hh = datetime.now().time().strftime('%H:%M:%S')
-        if date.today().weekday() == 0 and hh == '21:00:00':
+        if date.today().weekday() == 0 and hh == '09:55:30':
             donors = Donor.objects.filter().order_by('-ranking_points').exclude(ranking_points=0)
             donors_list = list(donors) # persistir QuerySet em list
 
@@ -232,21 +232,21 @@ def close_ranking():
                     # cupom 1o colocado
                     if donors_list.index(donor) == 0:
                         #print(donor.first_name, '+200')
-                        pk += '-#1-'+str(200) # concatenado ao valor do cupom
+                        pk += '-p1-'+str(200) # concatenado ao valor do cupom
                         Coupon.objects.create(donor_id=donor,value=200, pass_key=pk, 
                         used=False, expiration_date=exp_date, situation='A')
                     
                     # cupom 2o colocado
                     elif donors_list.index(donor) == 1:
                         #print(donor.first_name, '+100')
-                        pk += '-#2-'+str(100) # concatenado ao valor do cupom
+                        pk += '-p2-'+str(100) # concatenado ao valor do cupom
                         Coupon.objects.create(donor_id=donor,value=100, pass_key=pk, 
                         used=False, expiration_date=exp_date, situation='A')
                     
                     # cupom 3o colocado
                     elif donors_list.index(donor) == 2:
                         #print(donor.first_name, '+50')
-                        pk += '-#3-'+str(50) # concatenado ao valor do cupom
+                        pk += '-p3-'+str(50) # concatenado ao valor do cupom
                         Coupon.objects.create(donor_id=donor,value=50, pass_key=pk, 
                         used=False, expiration_date=exp_date, situation='A')
 
@@ -287,8 +287,8 @@ def coupons_page(request):
             for x in range(0,3):
                 post['pass_key'] += random.choice(string.ascii_letters)
             post['pass_key'] += '-'+str(post['value'])
-            post['expiration_date'] = str(date.today() + timedelta(days=3)) + ' ' + str(datetime.now().time())
-            #post['expiration_date'] = datetime.today() + timedelta(hours=-3, seconds=10)
+            #post['expiration_date'] = str(date.today() + timedelta(days=3)) + ' ' + str(datetime.now().time())
+            post['expiration_date'] = datetime.today() + timedelta(hours=-3, seconds=30)
             post['situation'] = 'A'
             request.POST = post
             
