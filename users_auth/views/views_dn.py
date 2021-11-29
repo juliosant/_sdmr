@@ -216,7 +216,7 @@ def close_ranking():
     global hh
     while True:
         hh = datetime.now().time().strftime('%H:%M:%S')
-        if date.today().weekday() == 0 and hh == '09:55:30':
+        if date.today().weekday() == 0 and hh == '21:00:00':
             donors = Donor.objects.filter().order_by('-ranking_points').exclude(ranking_points=0)
             donors_list = list(donors) # persistir QuerySet em list
 
